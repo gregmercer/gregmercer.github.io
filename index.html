@@ -12,18 +12,20 @@
 
 <div id="w">
    <div>
-      <form ng-submit="getGitInfo()">
+     <form ng-submit="getGitInfo()" ng-init="username = 'gsbitse'; getGitInfo();">
+         
          <h1>Simple Github API Webapp</h1>
    
          <p>Enter a single Github username below and click the button to display profile info.</p>
          
-         <select ng-model="username" ng-change="getGitInfo()" ng-select-option="gsbitse">
+         <select ng-model="username" ng-change="getGitInfo()">
            <option value="gsbitse">gsbitse</option>
            <option value="gregmercer">gregmercer</option>
          </select>         
    
-         <div id="ghapidata" class="clearfix"></div>         
-      </form>
+         <div id="ghapidata" class="clearfix"></div>
+         
+     </form>
    </div>
    <div ng-show="userNotFound">
       <h2>No User Info Found</h2>
