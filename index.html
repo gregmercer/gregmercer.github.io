@@ -12,14 +12,16 @@
 
 <div id="w">
    <div>
-      <h1>Simple Github API Webapp</h1>
-
-      <p>Enter a single Github username below and click the button to display profile info.</p>
-
-      <input type="text" id="ghusername" ng-model="username" placeholder="Github username...">
-      <a href="#" id="ghsubmitbtn" ng-click="getGitInfo()">Pull User Data</a>
-
-      <div id="ghapidata" class="clearfix"></div>
+      <form ng-submit="getGitInfo()">
+         <h1>Simple Github API Webapp</h1>
+   
+         <p>Enter a single Github username below and click the button to display profile info.</p>
+   
+         <input type="text" id="ghusername" ng-model="username" placeholder="Github username...">
+         <a href="#" id="ghsubmitbtn" ng-click="getGitInfo()">Pull User Data</a>
+   
+         <div id="ghapidata" class="clearfix"></div>         
+      </form>
    </div>
    <div ng-show="userNotFound">
       <h2>No User Info Found</h2>
