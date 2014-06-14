@@ -16,17 +16,11 @@
          <h1>Simple Github API Webapp</h1>
    
          <p>Enter a single Github username below and click the button to display profile info.</p>
-   
-         <!-- 
-         input type="text" id="ghusername" ng-model="username" placeholder="Github username..."
-         -->
          
          <select ng-model="username" ng-change="getGitInfo()">
            <option value="gsbitse">gsbitse</option>
            <option value="gregmercer">gregmercer</option>
          </select>         
-         
-         <a href="#" id="ghsubmitbtn" ng-click="getGitInfo()">Pull User Data</a>
    
          <div id="ghapidata" class="clearfix"></div>         
       </form>
