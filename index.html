@@ -21,7 +21,7 @@
          input type="text" id="ghusername" ng-model="username" placeholder="Github username..."
          -->
          
-         <select ng-model="username">
+         <select ng-model="username" ng-change="getGitInfo()">
            <option value="gsbitse">gsbitse</option>
            <option value="gregmercer">gregmercer</option>
          </select>         
