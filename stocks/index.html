@@ -33,7 +33,7 @@ function StocksCtrl($scope, $http) {
   $scope.getStockInfo = function () {
     console.log('in getStockInfo');
     $scope.loaded = true;
-    $http.get(url).success(function (data, status, headers, config) {
+    $http.get({ method: "JSONP", url: url }).success(function (data, status, headers, config) {
       console.log(data);
     }).error(function (data, status, headers, config) {
       console.log(status);
