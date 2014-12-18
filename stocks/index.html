@@ -264,7 +264,7 @@ function StocksCtrl($scope, $http) {
     $http.jsonp(url).success(function (data, status, headers, config) {
       $scope.quotes = data.query.results.quote;
       //console.log($scope.quotes);
-      for (var index = 0; index < $scope.quotes; index++) {
+      for (var index = 0; index < $scope.quotes.length; index++) {
         var quote = $scope.quotes[index];
         console.log(quote);
         $scope.items = [{
