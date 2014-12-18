@@ -29,8 +29,8 @@ function StocksCtrl($scope, $http) {
     {name: "Oracle", symbol: "ORCL"},
   ];
   var symbol = 'aapl';
-  //var url = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%3D%22' + symbol + '%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=JSON_CALLBACK';
-  var url = 'http://angularjs.org/greet.php?callback=JSON_CALLBACK&name=Super%20Hero';
+  var url = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%3D%22' + symbol + '%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=JSON_CALLBACK';
+  //var url = 'http://angularjs.org/greet.php?callback=JSON_CALLBACK&name=Super%20Hero';
   $scope.getStockInfo = function () {
     console.log('in getStockInfo');
     $scope.loaded = true;
