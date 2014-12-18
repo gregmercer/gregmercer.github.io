@@ -259,6 +259,7 @@ function StocksCtrl($scope, $http) {
     //var url = 'http://angularjs.org/greet.php?callback=JSON_CALLBACK&name=Super%20Hero';
 
     $scope.noitems = [];
+    $scope.items = [];
 
     $http.jsonp(url).success(function (data, status, headers, config) {
       $scope.quotes = data.query.results.quote;
