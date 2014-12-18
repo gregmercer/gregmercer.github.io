@@ -46,7 +46,7 @@
       <tr ng-repeat="item in items track by item.Name" ts-repeat>
         <td>{{item.Name}}</td>
         <td>{{item.Symbol}}</td>
-        <td>{{item.Change | currency}}</td>
+        <td>{{item.Change}}</td>
         <td>{{item.PercentChange}}</td>
         <td>{{item.Price | currency}}</td>
         <td>{{item.YearRange}}</td>
@@ -270,7 +270,7 @@ function StocksCtrl($scope, $http) {
           Name: quote.Name,
           Symbol: quote.symbol,
           Change: quote.Change,
-          PercentChange: quote.Change_PercentChange,
+          PercentChange: quote.PercentChange,
           Price: quote.LastTradePriceOnly,
           YearRange: quote.YearRange,
           YearPercentChange: quote.PercebtChangeFromYearHigh
