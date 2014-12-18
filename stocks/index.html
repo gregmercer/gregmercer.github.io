@@ -1,13 +1,13 @@
 <!doctype html>
-<html ng-app>
+<html ng-app="stocksApp">
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
-  <script type="text/javascript" src="js/jquery-latest.js"></script>
-  <script type="text/javascript" src="js/jquery.tablesorter.js"></script>
+  <script src="js/angular-tablesort.js"></script>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html">
   <title>Stocks</title>
   <link rel="stylesheet" type="text/css" media="all" href="../css/styles.css">
+  <link rel="stylesheet" type="text/css" media="all" href="../css/tablesort.css">
 </head>
 
 <body ng-controller="StocksCtrl">
@@ -32,52 +32,70 @@
     </div>
   </div>
   <div>
-    <table id="myTable" class="tablesorter">
-    <thead>
-    <tr>
-        <th>Last Name</th>
-        <th>First Name</th>
-        <th>Email</th>
-        <th>Due</th>
-        <th>Web Site</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>Smith</td>
-        <td>John</td>
-        <td>jsmith@gmail.com</td>
-        <td>$50.00</td>
-        <td>http://www.jsmith.com</td>
-    </tr>
-    <tr>
-        <td>Bach</td>
-        <td>Frank</td>
-        <td>fbach@yahoo.com</td>
-        <td>$50.00</td>
-        <td>http://www.frank.com</td>
-    </tr>
-    <tr>
-        <td>Doe</td>
-        <td>Jason</td>
-        <td>jdoe@hotmail.com</td>
-        <td>$100.00</td>
-        <td>http://www.jdoe.com</td>
-    </tr>
-    <tr>
-        <td>Conway</td>
-        <td>Tim</td>
-        <td>tconway@earthlink.net</td>
-        <td>$50.00</td>
-        <td>http://www.timconway.com</td>
-    </tr>
-    </tbody>
-    </table>
+        <table border="1" ts-wrapper>
+            <thead>
+            <tr>
+                <th>Select</th>
+                <th ts-criteria="Id">Id</th>
+                <th ts-criteria="Name|lowercase" ts-default>Name</th>
+                <th ts-criteria="Price|parseFloat">Price</th>
+                <th ts-criteria="Quantity|parseInt">Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in items track by item.Id" ts-repeat>
+                <td><input type="checkbox"></td>
+                <td>{{item.Id}}</td>
+                <td>{{item.Name}}</td>
+                <td>{{item.Price | currency}}</td>
+                <td>{{item.Quantity}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h1>Empty table</h1>
+        <table border="1" ts-wrapper>
+            <thead>
+            <tr>
+                <th>Select</th>
+                <th ts-criteria="Id">Id</th>
+                <th ts-criteria="Name|lowercase" ts-default>Name</th>
+                <th ts-criteria="Price|parseFloat">Price</th>
+                <th ts-criteria="Quantity|parseInt">Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in noitems" ts-repeat>
+                <td><input type="checkbox"></td>
+                <td>{{item.Id}}</td>
+                <td>{{item.Name}}</td>
+                <td>{{item.Price | currency}}</td>
+                <td>{{item.Quantity}}</td>
+            </tr>
+            </tbody>
+        </table>
   <div>
 </div>
 
 <script>
+
+var myApp = angular.module( 'stocksApp', ['tableSort' ] );
+
 function StocksCtrl($scope, $http) {
+
+
+  $scope.items = [
+      {Id: "01", Name: "A", Price: "1.00", Quantity: "1"},
+      {Id: "02", Name: "B", Price: "10.00", Quantity: "1"},
+      {Id: "04", Name: "C", Price: "9.50", Quantity: "10"},
+      {Id: "03", Name: "a", Price: "9.00", Quantity: "2"},
+      {Id: "06", Name: "b", Price: "100.00", Quantity: "2"},
+      {Id: "05",Name: "c", Price: "1.20", Quantity: "2"}
+  ];
+  $scope.noitems = [];
+
+
+
   $scope.stockList = [
     {name: "", symbol: "KO"},
     {name: "", symbol: "CPB"},
