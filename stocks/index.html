@@ -21,7 +21,10 @@
       </ul>
       -->
       <ul ng-repeat="quote in quotes">
-        <li>{{quote.Name}} {{quote.symbol}} {{quote.Change_PercentChange}}</li>
+        <li><strong>
+          {{quote.Name}} {{quote.symbol}} {{quote.Change_PercentChange}}
+          {{quote.LastTradePriceOnly}} {{quote.YearRange}} {{quote.PercebtChangeFromYearHigh}}
+        <strong></li>
       </ul>
     </div>
   </div>
