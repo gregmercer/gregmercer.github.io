@@ -35,7 +35,6 @@
         <table border="1" ts-wrapper>
             <thead>
             <tr>
-                <th>Select</th>
                 <th ts-criteria="Name|lowercase" ts-default>Name</th>
                 <th ts-criteria="Symbol|lowercase">Symbol</th>
                 <th ts-criteria="PercentChange|parseFloat">PercentChange</th>
@@ -267,14 +266,14 @@ function StocksCtrl($scope, $http) {
       for (var index = 0; index < $scope.quotes.length; index++) {
         var quote = $scope.quotes[index];
         console.log(quote);
-        $scope.items = [{
+        $scope.items[$scope.items.length] = {
           Name: quote.Name,
           Symbol: quote.symbol,
           PercentChange: quote.Change_PercentChange,
           Price: quote.LastTradePriceOnly,
           YearRange: quote.YearRange,
           YearPercentChange: quote.PercebtChangeFromYearHigh
-        }];
+        };
       }
     }).error(function (data, status, headers, config) {
       console.log(status);
