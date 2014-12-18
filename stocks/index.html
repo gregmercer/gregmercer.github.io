@@ -31,7 +31,7 @@
       </ul>
     </div>
   </div>
-  <div>
+  <div ng-show="loaded">
         <table border="1" ts-wrapper>
             <thead>
             <tr>
@@ -263,9 +263,10 @@ function StocksCtrl($scope, $http) {
 
     $http.jsonp(url).success(function (data, status, headers, config) {
       $scope.quotes = data.query.results.quote;
-      console.log($scope.quotes);
+      //console.log($scope.quotes);
       for (var index = 0; index < $scope.quotes; index++) {
         var quote = $scope.quotes[index];
+        console.log(quote);
         $scope.items = [{
           Name: quote.Name,
           Symbol: quote.symbol,
