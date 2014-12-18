@@ -14,14 +14,10 @@
 
 <form ng-submit="getGitInfo()" >
 <div id="w" ng-init="getStockInfo();">
+  <!--
   <div ng-show="loaded">
     <div>
       <p><strong>Wide Moat Stocks List:</strong></p>
-      <!--
-      <ul ng-repeat="stock in stockList">
-        <li>{{stock.name}} {{stock.symbol}}</li>
-      </ul>
-      -->
       <ul ng-repeat="quote in quotes">
         <li><strong>
           {{quote.Name}} {{quote.symbol}} {{quote.Change_PercentChange}}
@@ -31,53 +27,54 @@
       </ul>
     </div>
   </div>
+  -->
   <div ng-show="loaded">
-        <table border="1" ts-wrapper>
-            <thead>
-            <tr>
-                <th ts-criteria="Name|lowercase" ts-default>Name</th>
-                <th ts-criteria="Symbol|lowercase">Symbol</th>
-                <th ts-criteria="PercentChange|parseFloat">PercentChange</th>
-                <th ts-criteria="Price|parseFloat">Price</th>
-                <th ts-criteria="YearRange|parseFloat">YearRange</th>
-                <th ts-criteria="YearPercentChange|parseFloat">YearPercentChange</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="item in items track by item.Name" ts-repeat>
-                <td>{{item.Name}}</td>
-                <td>{{item.Symbol}}</td>
-                <td>{{item.PercentChange}}</td>
-                <td>{{item.Price | currency}}</td>
-                <td>{{item.YearRange}}</td>
-                <td>{{item.YearPercentChange}}</td>
-            </tr>
-            </tbody>
-        </table>
-
-        <!--
-        <h1>Empty table</h1>
-        <table border="1" ts-wrapper>
-            <thead>
-            <tr>
-                <th>Select</th>
-                <th ts-criteria="Id">Id</th>
-                <th ts-criteria="Name|lowercase" ts-default>Name</th>
-                <th ts-criteria="Price|parseFloat">Price</th>
-                <th ts-criteria="Quantity|parseInt">Quantity</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="item in noitems" ts-repeat>
-                <td><input type="checkbox"></td>
-                <td>{{item.Id}}</td>
-                <td>{{item.Name}}</td>
-                <td>{{item.Price | currency}}</td>
-                <td>{{item.Quantity}}</td>
-            </tr>
-            </tbody>
-        </table>
-      -->
+    <p><strong>Wide Moat Stocks List:</strong></p>
+    <table border="1" ts-wrapper>
+      <thead>
+      <tr>
+        <th ts-criteria="Name|lowercase" ts-default>Name</th>
+        <th ts-criteria="Symbol|lowercase">Symbol</th>
+        <th ts-criteria="PercentChange|parseFloat">PercentChange</th>
+        <th ts-criteria="Price|parseFloat">Price</th>
+        <th ts-criteria="YearRange|parseFloat">YearRange</th>
+        <th ts-criteria="YearPercentChange|parseFloat">YearPercentChange</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="item in items track by item.Name" ts-repeat>
+        <td>{{item.Name}}</td>
+        <td>{{item.Symbol}}</td>
+        <td>{{item.PercentChange}}</td>
+        <td>{{item.Price | currency}}</td>
+        <td>{{item.YearRange}}</td>
+        <td>{{item.YearPercentChange}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <!--
+    <h1>Empty table</h1>
+    <table border="1" ts-wrapper>
+        <thead>
+        <tr>
+            <th>Select</th>
+            <th ts-criteria="Id">Id</th>
+            <th ts-criteria="Name|lowercase" ts-default>Name</th>
+            <th ts-criteria="Price|parseFloat">Price</th>
+            <th ts-criteria="Quantity|parseInt">Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in noitems" ts-repeat>
+            <td><input type="checkbox"></td>
+            <td>{{item.Id}}</td>
+            <td>{{item.Name}}</td>
+            <td>{{item.Price | currency}}</td>
+            <td>{{item.Quantity}}</td>
+        </tr>
+        </tbody>
+    </table>
+    -->
   <div>
 </div>
 
