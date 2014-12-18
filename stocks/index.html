@@ -18,6 +18,9 @@
       <ul ng-repeat="stock in stockList">
         <li>{{stock.name}} {{stock.symbol}}</li>
       </ul>
+      <ul ng-repeat="quote in quotes">
+        <li>{{quote.Name}} {{quote.Change_symbol}} {{quote.Change_PercentChange}}</li>
+      </ul>
     </div>
   </div>
 </div>
