@@ -34,8 +34,8 @@ function StocksCtrl($scope, $http) {
   $scope.getStockInfo = function () {
     console.log('in getStockInfo');
     $scope.loaded = true;
-    for (var index = 0; index < stockList.length; index++) {
-      console.log(stockList[index].symbol);
+    for (var index = 0; index < $scope.stockList.length; index++) {
+      console.log($scope.stockList[index].symbol);
     }
     $http.jsonp(url).success(function (data, status, headers, config) {
       console.log(data);
