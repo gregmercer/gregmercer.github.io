@@ -41,7 +41,8 @@ function StocksCtrl($scope, $http) {
       console.log($scope.stockList[index].symbol);
     }
     $http.jsonp(url).success(function (data, status, headers, config) {
-      console.log(data);
+      $scope.results = data.results;
+      console.log($scope.results);
     }).error(function (data, status, headers, config) {
       console.log(status);
     });
