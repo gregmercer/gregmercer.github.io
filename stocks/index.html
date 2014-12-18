@@ -34,7 +34,12 @@ function StocksCtrl($scope, $http) {
     console.log('in getStockInfo');
     $scope.loaded = true;
     for (var index = 0; index < $scope.stockList.length; index++) {
-      symbols += $scope.stockList[index].symbol + '%22%2C%22';
+      symbols += $scope.stockList[index].symbol;
+      if (index == $scope.stockList.length - 1) {
+        symbols += '%22';
+      } else {
+        symbols += '%22%2C%22';
+      }
     }
     var url = 'http://query.yahooapis.com/v1/public/yql?' +
       'q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20' +
