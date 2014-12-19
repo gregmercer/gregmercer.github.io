@@ -36,10 +36,10 @@
         <th ts-criteria="Name|lowercase" ts-default>Name</th>
         <th ts-criteria="Symbol|lowercase">Symbol</th>
         <th ts-criteria="Change|parseFloat">Change</th>
-        <th ts-criteria="Price|parseFloat">Price&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-        <th ts-criteria="PercentChange|parseFloat">% Change</th>
-        <th>Year Range</th>
-        <th ts-criteria="YearPercentChange|parseFloat">Year % Change</th>
+        <th ts-criteria="Price|parseFloat" align="right">Price&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        <th ts-criteria="PercentChange|parseFloat" align="right">% Change</th>
+        <th align="right">Year Range</th>
+        <th ts-criteria="YearPercentChange|parseFloat" align="right">Year % Change</th>
       </tr>
       </thead>
       <tbody>
@@ -49,7 +49,7 @@
         <td>{{item.Change}}</td>
         <td align="right">{{item.Price | currency}}</td>
         <td align="right">{{item.PercentChange}}</td>
-        <td align="right">{{item.YearRange | currency}}</td>
+        <td align="right">{{item.YearRange}}</td>
         <td align="right">{{item.YearPercentChange}}</td>
       </tr>
       </tbody>
