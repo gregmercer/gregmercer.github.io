@@ -13,7 +13,6 @@
 
 <body ng-controller="StocksCtrl">
 
-<form ng-submit="getGitInfo()" >
 <div id="w" ng-init="getStockInfo();">
   <div ng-show="loaded">
     <p><strong>Wide Moat Stocks:</strong></p>
@@ -41,29 +40,6 @@
       </tr>
       </tbody>
     </table>
-    <!--
-    <h1>Empty table</h1>
-    <table border="1" ts-wrapper>
-        <thead>
-        <tr>
-            <th>Select</th>
-            <th ts-criteria="Id">Id</th>
-            <th ts-criteria="Name|lowercase" ts-default>Name</th>
-            <th ts-criteria="Price|parseFloat">Price</th>
-            <th ts-criteria="Quantity|parseInt">Quantity</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="item in noitems" ts-repeat>
-            <td><input type="checkbox"></td>
-            <td>{{item.Id}}</td>
-            <td>{{item.Name}}</td>
-            <td>{{item.Price | currency}}</td>
-            <td>{{item.Quantity}}</td>
-        </tr>
-        </tbody>
-    </table>
-    -->
   <div>
 </div>
 
@@ -74,12 +50,26 @@ var stocksApp = angular.module( 'stocksApp', ['tableSort', 'wideStocksService'] 
 function StocksCtrl($scope, $http, wideStocksService) {
 
   $scope.getStockInfo = function () {
-
-    console.log('in getStockInfo');
-    $scope.loaded = true;
-
     //var symbols = 'YHOO%22%2C%22AAPL%22%2C%22GOOG%22%2C%22MSFT%22';
     var symbols = $scope.loadSymbols(wideStocksService.getData());
+    $scope.getItems(symbols);
+    $scope.loaded = true;
+  } // end getStockInfo
+
+  $scope.loadSymbols = function(stockList) {
+    var symbols = '';
+    for (var index = 0; index < stockList.length; index++) {
+      symbols += stockList[index].symbol;
+      if (index == stockList.length - 1) {
+        symbols += '%22';
+      } else {
+        symbols += '%22%2C%22';
+      }
+    }
+    return symbols;
+  } // end loadSymbols
+
+  $scope.getItems = function(symbols) {
 
     var url = 'http://query.yahooapis.com/v1/public/yql?' +
       'q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20' +
@@ -91,10 +81,9 @@ function StocksCtrl($scope, $http, wideStocksService) {
     $scope.items = [];
 
     $http.jsonp(url).success(function (data, status, headers, config) {
-      $scope.quotes = data.query.results.quote;
-      //console.log($scope.quotes);
-      for (var index = 0; index < $scope.quotes.length; index++) {
-        var quote = $scope.quotes[index];
+      var quotes = data.query.results.quote;
+      for (var index = 0; index < quotes.length; index++) {
+        var quote = quotes[index];
         console.log(quote);
         $scope.items[$scope.items.length] = {
           Name: quote.Name,
@@ -109,20 +98,8 @@ function StocksCtrl($scope, $http, wideStocksService) {
     }).error(function (data, status, headers, config) {
       console.log(status);
     });
-  }
 
-  $scope.loadSymbols = function (stockList) {
-    var symbols = '';
-    for (var index = 0; index < stockList.length; index++) {
-      symbols += stockList[index].symbol;
-      if (index == stockList.length - 1) {
-        symbols += '%22';
-      } else {
-        symbols += '%22%2C%22';
-      }
-    }
-    return symbols;
-  }
+  } // end getItems
 
 }
 </script>
