@@ -83,11 +83,11 @@
 
 <script>
 
-var stocksApp = angular.module( 'stocksApp', ['tableSort', 'greetings'] );
+var stocksApp = angular.module( 'stocksApp', ['tableSort', 'greetingsService'] );
 
-function StocksCtrl($scope, $http, greetings) {
+function StocksCtrl($scope, $http, greetingsService) {
 
-  $scope.hello = greetings.sayHello('Bob');
+  $scope.hello = greetingsService.sayHello('Bob');
 
   $scope.stockList = [
     {name: "", symbol: "KO"},
