@@ -15,20 +15,6 @@
 
 <form ng-submit="getGitInfo()" >
 <div id="w" ng-init="getStockInfo();">
-  <!--
-  <div ng-show="loaded">
-    <div>
-      <p><strong>Wide Moat Stocks List:</strong></p>
-      <ul ng-repeat="quote in quotes">
-        <li><strong>
-          {{quote.Name}} {{quote.symbol}} {{quote.Change_PercentChange}}
-          {{quote.LastTradePriceOnly}} {{quote.YearRange}} {{quote.PercebtChangeFromYearHigh}}
-        <strong></li>
-        <li>&nbsp;</li>
-      </ul>
-    </div>
-  </div>
-  -->
   <div ng-show="loaded">
     <p><strong>Wide Moat Stocks:</strong></p>
     <table border="1" ts-wrapper>
@@ -87,22 +73,13 @@ var stocksApp = angular.module( 'stocksApp', ['tableSort', 'wideStocksService'] 
 
 function StocksCtrl($scope, $http, wideStocksService) {
 
-  $scope.stockList = wideStocksService.getData();
-
-  var symbols = ''; //'YHOO%22%2C%22AAPL%22%2C%22GOOG%22%2C%22MSFT%22';
   $scope.getStockInfo = function () {
 
     console.log('in getStockInfo');
     $scope.loaded = true;
 
-    for (var index = 0; index < $scope.stockList.length; index++) {
-      symbols += $scope.stockList[index].symbol;
-      if (index == $scope.stockList.length - 1) {
-        symbols += '%22';
-      } else {
-        symbols += '%22%2C%22';
-      }
-    }
+    //var symbols = 'YHOO%22%2C%22AAPL%22%2C%22GOOG%22%2C%22MSFT%22';
+    var symbols = $scope.loadSymbols(wideStocksService.getData());
 
     var url = 'http://query.yahooapis.com/v1/public/yql?' +
       'q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20' +
@@ -133,6 +110,20 @@ function StocksCtrl($scope, $http, wideStocksService) {
       console.log(status);
     });
   }
+
+  $scope.loadSymbols = function (stockList) {
+    var symbols = '';
+    for (var index = 0; index < stockList.length; index++) {
+      symbols += stockList[index].symbol;
+      if (index == stockList.length - 1) {
+        symbols += '%22';
+      } else {
+        symbols += '%22%2C%22';
+      }
+    }
+    return symbols;
+  }
+
 }
 </script>
 
