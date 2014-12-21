@@ -56,7 +56,6 @@ function StocksCtrl($scope, $http, etfsService) {
   $scope.getStockInfo = function () {
     var symbols = $scope.loadSymbols(etfsService.getData());
     $scope.quotes = $scope.getQuotes(symbols);
-    console.log($scope.quotes.length);
     $scope.loaded = true;
   } // end getStockInfo
 
@@ -97,8 +96,12 @@ function StocksCtrl($scope, $http, etfsService) {
         };
       }
     }).error(function (data, status, headers, config) {
+      console.log('in error');
       console.log(status);
     });
+
+    console.log('quotes length = ' + quotes.length);
+    console.log(quotes.length);
 
     return quotes;
 
