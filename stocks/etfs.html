@@ -55,7 +55,7 @@ function StocksCtrl($scope, $http, etfsService) {
 
   $scope.getStockInfo = function () {
     var symbols = $scope.loadSymbols(etfsService.getData());
-    $scope.quotes = $scope.getQuotes(symbols);
+    $scope.getQuotes(symbols);
     $scope.loaded = true;
   } // end getStockInfo
 
@@ -95,15 +95,12 @@ function StocksCtrl($scope, $http, etfsService) {
           YearPercentChange: quote.PercebtChangeFromYearHigh
         };
       }
+      $scope.quotes = quotes;
     }).error(function (data, status, headers, config) {
       console.log('in error');
       console.log(status);
+      $scope.quotes = quotes;
     });
-
-    console.log('quotes length = ' + quotes.length);
-    console.log(quotes.length);
-
-    return quotes;
 
   } // end getQuotes
 
