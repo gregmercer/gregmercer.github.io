@@ -29,7 +29,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="quote in quotes track by quote.Name" ts-repeat>
+      <tr ng-repeat="quote in quotes track by quote.Symbol" ts-repeat>
         <td>{{quote.Name}}</td>
         <td>{{quote.Symbol}}</td>
         <td>{{quote.Change}}</td>
@@ -55,7 +55,7 @@ function StocksCtrl($scope, $http, etfsService) {
 
   $scope.getStockInfo = function () {
     var symbols = $scope.loadSymbols(etfsService.getData());
-    $scope.getQuotes(symbols);
+    $scope.quotes = $scope.getQuotes(symbols);
     $scope.loaded = true;
   } // end getStockInfo
 
@@ -99,8 +99,9 @@ function StocksCtrl($scope, $http, etfsService) {
     }).error(function (data, status, headers, config) {
       console.log('in error');
       console.log(status);
-      $scope.quotes = quotes;
     });
+
+    return quotes;
 
   } // end getQuotes
 

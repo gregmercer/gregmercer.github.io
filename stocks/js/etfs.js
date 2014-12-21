@@ -5,7 +5,7 @@ etfsModule.service('etfsService', function(){
     var symbols = [
       {symbol: "TAPR"},
       {symbol: "SPY"},
-      /*{symbol: "IVV"},
+      {symbol: "IVV"},
       {symbol: "EFA"},
       {symbol: "VTI"},
       {symbol: "QQQ"},
@@ -86,7 +86,7 @@ etfsModule.service('etfsService', function(){
       {symbol: "SHV"},
       {symbol: "IJJ"},
       {symbol: "IYW"},
-      {symbol: "SPLV"}, */
+      {symbol: "SPLV"},
       {symbol: "OEF"},
       {symbol: "VBR"},
       {symbol: "RWX"},
