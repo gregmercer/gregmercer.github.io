@@ -3,7 +3,6 @@
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
   <script src="js/angular-tablesort.js"></script>
-  <script src="js/greetings.js"></script>
   <script src="js/wideStocks.js"></script>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html">
@@ -31,7 +30,7 @@
   </div>
   -->
   <div ng-show="loaded">
-    <p><strong>{{hello}} Wide Moat Stocks List:</strong></p>
+    <p><strong>Wide Moat Stocks:</strong></p>
     <table border="1" ts-wrapper>
       <thead>
       <tr>
@@ -84,11 +83,9 @@
 
 <script>
 
-var stocksApp = angular.module( 'stocksApp', ['tableSort', 'greetingsService', 'wideStocksService'] );
+var stocksApp = angular.module( 'stocksApp', ['tableSort', 'wideStocksService'] );
 
-function StocksCtrl($scope, $http, greetingsService, wideStocksService) {
-
-  $scope.hello = greetingsService.sayHello('Bob');
+function StocksCtrl($scope, $http, wideStocksService) {
 
   $scope.stockList = wideStocksService.getData();
 
