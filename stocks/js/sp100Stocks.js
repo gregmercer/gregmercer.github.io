@@ -20,7 +20,7 @@ sp100StocksModule.service('sp100StocksService', function(){
       {symbol: "BIIB"},
       {symbol: "BK"},
       {symbol: "BMY"},
-      {symbol: "BRK.B"},
+      //{symbol: "BRK.B"},
       {symbol: "C"},
       {symbol: "CAT"},
       {symbol: "CL"},
