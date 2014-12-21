@@ -81,7 +81,7 @@ function StocksCtrl($scope, $http, wideStocksService) {
 
     $http.jsonp(url).success(function (data, status, headers, config) {
       var results = data.query.results.quote;
-      for (var index = 0; index < quotes.length; index++) {
+      for (var index = 0; index < results.length; index++) {
         var quote = results[index];
         console.log(quote);
         quotes[quotes.length] = {
