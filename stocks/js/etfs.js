@@ -86,7 +86,7 @@ etfsModule.service('etfsService', function(){
       {symbol: "SHV"},
       {symbol: "IJJ"},
       {symbol: "IYW"},
-      {symbol: "SPLV"},
+      {symbol: "SPLV"}, */
       {symbol: "OEF"},
       {symbol: "VBR"},
       {symbol: "RWX"},
@@ -101,7 +101,7 @@ etfsModule.service('etfsService', function(){
       {symbol: "IDV"},
       {symbol: "DBC"},
       {symbol: "EWY"},
-      {symbol: "IEI"}, */
+      {symbol: "IEI"},
       {symbol: "MUB"}
     ];
     return symbols;
