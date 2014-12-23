@@ -1,6 +1,6 @@
-var etfsModule = angular.module( 'etfsService', [] );
+var vansModule = angular.module( 'vansService', [] );
 
-etfsModule.service('etfsService', function(){
+vansModule.service('vansService', function(){
   this.getData= function(){
     var symbols = [
       {symbol: "VTI"},
