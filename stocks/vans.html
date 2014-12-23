@@ -120,7 +120,8 @@ function StocksCtrl($scope, $http, vansService) {
     $http.jsonp(url).success(function (data, status, headers, config) {
       var results = data.query.results.a;
       for (var index = 0; index < results.length; index++) {
-        console.log(results[index]);
+        console.log(results[index].content);
+        console.log(results[index].href);
       }
     }).error(function (data, status, headers, config) {
       console.log('in error');
