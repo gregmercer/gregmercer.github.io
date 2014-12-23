@@ -57,6 +57,7 @@ function StocksCtrl($scope, $http, vansService) {
     var symbols = $scope.loadSymbols(vansService.getData());
     $scope.quotes = $scope.getQuotes(symbols);
     $scope.loaded = true;
+    $scope.getHeadlines('HIBB');
   } // end getStockInfo
 
   $scope.loadSymbols = function(stockList) {
