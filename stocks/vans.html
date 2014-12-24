@@ -19,6 +19,7 @@
     <table border="1" ts-wrapper>
       <thead>
       <tr>
+        <th>&nbsp;</th>
         <th ts-criteria="Name|lowercase" ts-default>Name</th>
         <th ts-criteria="Symbol|lowercase">Symbol</th>
         <th ts-criteria="Change|parseFloat">Change</th>
@@ -42,6 +43,12 @@
       </tbody>
     </table>
   <div>
+</div>
+
+<div>
+  <ul ng-repeat="headline in headlines">
+    <li>{{headline.content}} {{headline.href}}</li>
+  </ul>
 </div>
 
 <script>
@@ -109,25 +116,31 @@ function StocksCtrl($scope, $http, vansService) {
 
   $scope.getHeadlines = function(event, symbol) {
 
-    var SELECT_HEADLINE_QUERY_PART1 =
-      "q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3D";
-    var SELECT_HEADLINE_QUERY_PART2 =
-      "'%20and%20xpath%3D'%2F%2Fdiv%5B%40id%3D%22yfi_headlines%22%5D%2Fdiv%5B2%5D%2Ful%2Fli%2Fa'";
+    if (event.target.checked) {
+      var SELECT_HEADLINE_QUERY_PART1 =
+        "q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3D";
+      var SELECT_HEADLINE_QUERY_PART2 =
+        "'%20and%20xpath%3D'%2F%2Fdiv%5B%40id%3D%22yfi_headlines%22%5D%2Fdiv%5B2%5D%2Ful%2Fli%2Fa'";
 
-    var url = YAHOO_QUERYAPI_URL +
-      SELECT_HEADLINE_QUERY_PART1 + symbol + SELECT_HEADLINE_QUERY_PART2 +
-      QUERY_PROPERTIES;
+      var url = YAHOO_QUERYAPI_URL +
+        SELECT_HEADLINE_QUERY_PART1 + symbol + SELECT_HEADLINE_QUERY_PART2 +
+        QUERY_PROPERTIES;
 
-    $http.jsonp(url).success(function (data, status, headers, config) {
-      var results = data.query.results.a;
-      for (var index = 0; index < results.length; index++) {
-        console.log(results[index].content);
-        console.log(results[index].href);
-      }
-    }).error(function (data, status, headers, config) {
-      console.log('in error');
-      console.log(status);
-    });
+      $http.jsonp(url).success(function (data, status, headers, config) {
+        var results = data.query.results.a;
+        for (var index = 0; index < results.length; index++) {
+          $scope.headlines[$scope.headlines.length] = {
+            content: results[index].content,
+            href: results[index].href
+          }
+        }
+      }).error(function (data, status, headers, config) {
+        console.log('in error');
+        console.log(status);
+      });
+    } else {
+
+    }
 
   }
 
