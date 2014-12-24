@@ -45,9 +45,9 @@
   <div>
 </div>
 
-<div>
+<div id="w">
   <ul ng-repeat="headline in headlines">
-    <li>{{headline.content}} {{headline.href}}</li>
+    <li><a href="{{headline.href}}">{{headline.content}}</a></li>
   </ul>
 </div>
 
