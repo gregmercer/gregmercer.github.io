@@ -49,7 +49,7 @@
 
 <div>
   <ul ng-repeat="headline in headlines">
-    <li><a href="{{headline.href}}" target='_blank'>{{headline.content}}</a></li>
+    <li><a href="{{headline.href}}" target='_blank'>{{headline.symbol}} {{headline.content}}</a></li>
     <li>&nbsp;</li>
   </ul>
 </div>
@@ -119,6 +119,8 @@ function StocksCtrl($scope, $http, vansService) {
 
   $scope.getHeadlines = function(event, symbol) {
 
+    $scope.currentSymbol = symbol;
+
     if (event.target.checked) {
       var SELECT_HEADLINE_QUERY_PART1 =
         "q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3D";
@@ -133,6 +135,7 @@ function StocksCtrl($scope, $http, vansService) {
         var results = data.query.results.a;
         for (var index = 0; index < results.length; index++) {
           $scope.headlines[$scope.headlines.length] = {
+            symbol: $scope.currentSymbol,
             content: results[index].content,
             href: results[index].href
           }
