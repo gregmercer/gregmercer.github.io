@@ -49,7 +49,7 @@
 
 <div>
   <ul ng-repeat="headline in headlines">
-    <li>({{headline.symbol}}) <a href="{{headline.href}}" target='_blank'>{{headline.content}}</a></li>
+    <li><a href="{{headline.href}}" target='_blank'>({{headline.symbol}}) {{headline.content}}</a></li>
     <li>&nbsp;</li>
   </ul>
 </div>
