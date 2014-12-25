@@ -166,7 +166,7 @@ function StocksCtrl($scope, $http, vansService) {
     for (var index = 1; index < $scope.headlines.length; index++) {
       symbols[symbols.length] = $scope.headlines[index].symbol;
     }
-    symbols.unique();
+    symbols = symbols.unique();
     localStorage.setItem("gmercer:stocks:headlines:symbols", symbols.join());
   }
 
