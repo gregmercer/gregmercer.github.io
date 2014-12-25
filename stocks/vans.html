@@ -148,7 +148,7 @@ function StocksCtrl($scope, $http, vansService) {
 
       // unchecking, remove headlines
 
-      for (var index = 0; index < $scope.headlines.length; index++) {
+      for (var index = $scope.headlines.length; index >= 0; index--) {
         var headline = $scope.headlines[index];
         if (headline.symbol == $scope.currentSymbol) {
           $scope.headlines.splice(index, 1);
