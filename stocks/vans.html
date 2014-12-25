@@ -156,6 +156,7 @@ function StocksCtrl($scope, $http, vansService) {
     }
 
     // Save the Headline symbols to local storage
+    $scope.$apply();
     $scope.saveHeadlineSymbols();
 
   }
