@@ -126,8 +126,6 @@ function StocksCtrl($scope, $http, vansService) {
         .then(function(headlines) {
           $scope.headlines = headlines;
         });
-   });
-
     } else {
       // unchecking, remove headlines for the symbol
       for (var index = $scope.headlines.length - 1; index >= 0; index--) {
@@ -136,7 +134,6 @@ function StocksCtrl($scope, $http, vansService) {
           $scope.headlines.splice(index, 1);
         }
       }
-
     }
 
     // Save the Headline symbols to local storage
