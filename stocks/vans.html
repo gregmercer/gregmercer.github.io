@@ -163,12 +163,10 @@ function StocksCtrl($scope, $http, vansService) {
       QUERY_PROPERTIES;
 
     return $http.jsonp(url)
-      .then(
-        var headlines = [];
-        function (response) {
+      .then(function (response) {
+          var headlines = [];
           return headlines;
-        }
-      );
+      });
   }
 
 }
