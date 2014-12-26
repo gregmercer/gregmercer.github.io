@@ -122,8 +122,11 @@ function StocksCtrl($scope, $http, vansService) {
     $scope.currentSymbol = symbol;
 
     if (event.target.checked) {
-
-      $scope.headlines = $scope.getHeadlines(symbol);
+      $scope.getHeadlines(symbol)
+        .then(function(headlines) {
+          $scope.headlines = headlines;
+        });
+   });
 
     } else {
       // unchecking, remove headlines for the symbol
