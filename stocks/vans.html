@@ -164,8 +164,19 @@ function StocksCtrl($scope, $http, vansService) {
 
     return $http.jsonp(url)
       .then(function (response) {
-          var headlines = [];
-          return headlines;
+        var headlines = [];
+        if (response.status == 200) {
+          // add headlines for the symbol
+          var results = response.data.query.results.a;
+          for (var index = 0; index < results.length; index++) {
+            headlines[headlines.length] = {
+              symbol: $scope.currentSymbol,
+              content: results[index].content,
+              href: results[index].href
+            }
+          }
+        }
+        return headlines;
       });
   }
 
