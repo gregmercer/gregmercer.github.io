@@ -117,7 +117,7 @@ function StocksCtrl($scope, $http, $q, vansService) {
 
   } // end getQuotes
 
-  $scope.resfreshHeadlines = function(event, symbol) {
+  $scope.refreshHeadlines = function(event, symbol) {
 
     $scope.refreshHeadlinesList(event, symbol)
       .then(function(result) {
