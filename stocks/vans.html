@@ -135,7 +135,7 @@ function StocksCtrl($scope, $http, $q, vansService) {
       $scope.getHeadlines(symbol)
         .then(function(headlines) {
           $scope.headlines = headlines.concat($scope.headlines);
-          deffered.resolve('headlines added');
+          deferred.resolve('headlines added');
         });
     } else {
       // unchecking, remove headlines for the symbol
@@ -145,7 +145,7 @@ function StocksCtrl($scope, $http, $q, vansService) {
           $scope.headlines.splice(index, 1);
         }
       }
-      deffered.resolve('headlines removed');
+      deferred.resolve('headlines removed');
     }
 
     return deferred.promise;
