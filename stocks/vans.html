@@ -119,6 +119,15 @@ function StocksCtrl($scope, $http, vansService) {
 
   $scope.refreshHeadlines = function(event, symbol) {
 
+    $scope.refreshHeadlineSymbols(event, symbol)
+      .then(function() {
+        // Save the Headline symbols to local storage
+        $scope.saveHeadlineSymbols();
+      });
+  }
+
+  $scope.refreshHeadlineSymbols = function(event, symbol) {
+
     if (event.target.checked) {
       // checking, add headlines for the symbol
       $scope.getHeadlines(symbol)
@@ -134,9 +143,6 @@ function StocksCtrl($scope, $http, vansService) {
         }
       }
     }
-
-    // Save the Headline symbols to local storage
-    $scope.saveHeadlineSymbols();
 
   }
 
