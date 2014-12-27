@@ -152,8 +152,6 @@ function StocksCtrl($scope, $http, vansService) {
 
   $scope.getHeadlines = function(symbol) {
 
-    $scope.currentSymbol = symbol;
-
     var SELECT_HEADLINE_QUERY_PART1 =
       "q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3D";
     var SELECT_HEADLINE_QUERY_PART2 =
@@ -170,7 +168,7 @@ function StocksCtrl($scope, $http, vansService) {
           var results = response.data.query.results.a;
           for (var index = 0; index < results.length; index++) {
             headlines[headlines.length] = {
-              symbol: symbol, //$scope.currentSymbol,
+              symbol: symbol,
               content: results[index].content,
               href: results[index].href
             }
