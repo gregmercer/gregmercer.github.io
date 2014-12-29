@@ -1,6 +1,6 @@
 var headlinesModule = angular.module( 'headlinesService', [] );
 
-headlinesModule.service('headlinesService', function($q) {
+headlinesModule.service('headlinesService', function($http, $q) {
 
   var headlines = [];
 
