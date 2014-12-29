@@ -2,7 +2,7 @@ var headlinesModule = angular.module( 'headlinesService', [] );
 
 headlinesModule.service('headlinesService', function() {
 
-  $scope.refreshHeadlines = function(event, symbol) {
+  this.refreshHeadlines = function(event, symbol) {
     $scope.refreshHeadlinesList(event, symbol)
       .then(function(result) {
         // Save the Headline symbols to local storage
@@ -10,7 +10,7 @@ headlinesModule.service('headlinesService', function() {
       });
   } // end refreshHeadlines
 
-  $scope.refreshHeadlinesList = function(event, symbol) {
+  this.refreshHeadlinesList = function(event, symbol) {
 
     var deferred = $q.defer();
 
@@ -36,7 +36,7 @@ headlinesModule.service('headlinesService', function() {
 
   } // end refreshHeadlinesList
 
-  $scope.saveHeadlineSymbols = function() {
+  this.saveHeadlineSymbols = function() {
     //var myArray = myString.split(',');
     var symbols = [];
     for (var index = 1; index < $scope.headlines.length; index++) {
@@ -46,7 +46,7 @@ headlinesModule.service('headlinesService', function() {
     localStorage.setItem("gmercer:stocks:headlines:symbols", symbols.join());
   } // end saveHeadlineSymbols
 
-  $scope.getHeadlinesData = function(symbol) {
+  this.getHeadlinesData = function(symbol) {
 
     var SELECT_HEADLINE_QUERY_PART1 =
       "q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3D";
