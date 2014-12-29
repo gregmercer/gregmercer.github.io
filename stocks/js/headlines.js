@@ -7,11 +7,12 @@ headlinesModule.service('headlinesService', function($http, $q) {
   this.refreshHeadlines = function(event, symbol) {
 
     var deferred = $q.defer();
+    var that = this;
 
     this.refreshHeadlinesList(event, symbol)
       .then(function(result) {
         // Save the Headline symbols to local storage
-        this.saveHeadlineSymbols();
+        that.saveHeadlineSymbols();
         deferred.resolve(headlines);
       });
 
