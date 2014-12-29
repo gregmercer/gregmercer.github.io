@@ -8,10 +8,10 @@ headlinesModule.service('headlinesService', function($q) {
 
     var deferred = $q.defer();
 
-    refreshHeadlinesList(event, symbol)
+    this.refreshHeadlinesList(event, symbol)
       .then(function(result) {
         // Save the Headline symbols to local storage
-        saveHeadlineSymbols();
+        this.saveHeadlineSymbols();
         deferred.resolve(headlines);
       });
 
@@ -25,7 +25,7 @@ headlinesModule.service('headlinesService', function($q) {
 
     if (event.target.checked) {
       // checking, add headlines for the symbol
-      getHeadlinesData(symbol)
+      this.getHeadlinesData(symbol)
         .then(function(newHeadlines) {
           headlines = newHeadlines.concat(headlines);
           deferred.resolve('headlines added');
