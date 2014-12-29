@@ -119,7 +119,10 @@ function StocksCtrl($scope, $http, $q, headlinesService, vansService) {
   } // end getQuotes
 
   $scope.refreshHeadlines = function(event, symbol) {
-    headlinesService.refreshHeadlines(event, symbol);
+    headlinesService.refreshHeadlines(event, symbol)
+      .then(function(headlines) {
+        $scope.headlines = headlines;
+      });
   } // end refreshHeadlines
 
 }

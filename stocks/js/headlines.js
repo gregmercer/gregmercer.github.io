@@ -5,11 +5,18 @@ headlinesModule.service('headlinesService', function() {
   var headlines = [];
 
   this.refreshHeadlines = function(event, symbol) {
+
+    var deferred = $q.defer();
+
     refreshHeadlinesList(event, symbol)
       .then(function(result) {
         // Save the Headline symbols to local storage
         saveHeadlineSymbols();
+        deferred.resolve(headlines);
       });
+
+    return deferred.promise;
+
   } // end refreshHeadlines
 
   this.refreshHeadlinesList = function(event, symbol) {
