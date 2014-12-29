@@ -2,11 +2,13 @@ var headlinesModule = angular.module( 'headlinesService', [] );
 
 headlinesModule.service('headlinesService', function() {
 
+  var headlines = [];
+
   this.refreshHeadlines = function(event, symbol) {
-    $scope.refreshHeadlinesList(event, symbol)
+    refreshHeadlinesList(event, symbol)
       .then(function(result) {
         // Save the Headline symbols to local storage
-        $scope.saveHeadlineSymbols();
+        saveHeadlineSymbols();
       });
   } // end refreshHeadlines
 
@@ -16,17 +18,17 @@ headlinesModule.service('headlinesService', function() {
 
     if (event.target.checked) {
       // checking, add headlines for the symbol
-      $scope.getHeadlinesData(symbol)
-        .then(function(headlines) {
-          $scope.headlines = headlines.concat($scope.headlines);
+      getHeadlinesData(symbol)
+        .then(function(newHeadlines) {
+          headlines = newHeadlines.concat(headlines);
           deferred.resolve('headlines added');
         });
     } else {
       // unchecking, remove headlines for the symbol
-      for (var index = $scope.headlines.length - 1; index >= 0; index--) {
-        var headline = $scope.headlines[index];
+      for (var index = headlines.length - 1; index >= 0; index--) {
+        var headline = headlines[index];
         if (headline.symbol == symbol) {
-          $scope.headlines.splice(index, 1);
+          headlines.splice(index, 1);
         }
       }
       deferred.resolve('headlines removed');
@@ -39,8 +41,8 @@ headlinesModule.service('headlinesService', function() {
   this.saveHeadlineSymbols = function() {
     //var myArray = myString.split(',');
     var symbols = [];
-    for (var index = 1; index < $scope.headlines.length; index++) {
-      symbols[symbols.length] = $scope.headlines[index].symbol;
+    for (var index = 1; index < headlines.length; index++) {
+      symbols[symbols.length] = headlines[index].symbol;
     }
     symbols = symbols.unique();
     localStorage.setItem("gmercer:stocks:headlines:symbols", symbols.join());
