@@ -9,3 +9,13 @@ http://www.barrons400etf.com/holdings.php
 Add links for weekly Barron's podcasts:<br/>
 http://podcast.mktw.net/wsj/audio/20141226/pod-wsjbarrons/pod-wsjbarrons.mp3
 
+Book links:
+
+Where Value Hides: A New Way to Uncover Profitable Growth For Your Business<br/>
+http://www.amazon.com/Where-Value-Hides-Profitable-Business/dp/0470009209
+
+Why Moats Matter: The Morningstar Approach to Stock Investing<br/>
+http://www.amazon.com/dp/1118760239
+
+Berkshire Beyond Buffett: The Enduring Value of Values<br/>
+http://www.amazon.com/dp/0231170041
