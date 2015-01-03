@@ -32,6 +32,7 @@
       </thead>
       <tbody>
       <tr ng-repeat="quote in quotes track by quote.Name" ts-repeat>
+        <td><input type="checkbox" name="" ng-click="refreshHeadlines($event, quote.Symbol)"></td>
         <td>{{quote.Name}}</td>
         <td>{{quote.Symbol}}</td>
         <td>{{quote.Change}}</td>
