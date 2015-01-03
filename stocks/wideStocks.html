@@ -2,7 +2,9 @@
 <html ng-app="stocksApp">
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+  <script src="js/utils.js"></script>
   <script src="js/angular-tablesort.js"></script>
+  <script src="js/headlines.js"></script>
   <script src="js/wideStocks.js"></script>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html">
@@ -43,15 +45,24 @@
   <div>
 </div>
 
+</br>
+
+<div>
+  <ul ng-repeat="headline in headlines">
+    <li><a href="{{headline.href}}" target='_blank'>({{headline.symbol}}) {{headline.content}}</a></li>
+    <li>&nbsp;</li>
+  </ul>
+</div>
+
 <script>
 
 var YAHOO_QUERYAPI_URL = 'http://query.yahooapis.com/v1/public/yql?';
 var SELECT_QUERY = 'q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20';
 var QUERY_PROPERTIES = '&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=JSON_CALLBACK';
 
-var stocksApp = angular.module( 'stocksApp', ['tableSort', 'wideStocksService'] );
+var stocksApp = angular.module( 'stocksApp', ['tableSort', 'headlinesService', 'wideStocksService'] );
 
-function StocksCtrl($scope, $http, wideStocksService) {
+function StocksCtrl($scope, $http, $q, headlinesService, wideStocksService) {
 
   $scope.getStockInfo = function () {
     var symbols = $scope.loadSymbols(wideStocksService.getData());
@@ -102,6 +113,13 @@ function StocksCtrl($scope, $http, wideStocksService) {
     return quotes;
 
   } // end getQuotes
+
+  $scope.refreshHeadlines = function(event, symbol) {
+    headlinesService.refreshHeadlines(event, symbol)
+      .then(function(headlines) {
+        $scope.headlines = headlines;
+      });
+  } // end refreshHeadlines
 
 }
 </script>
