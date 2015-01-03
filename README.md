@@ -19,3 +19,8 @@ http://www.amazon.com/dp/1118760239
 
 Berkshire Beyond Buffett: The Enduring Value of Values<br/>
 http://www.amazon.com/dp/0231170041
+
+Read:
+
+Research related to competition at Babson<br/>
+http://faculty.babson.edu/gwin/indstudy/
