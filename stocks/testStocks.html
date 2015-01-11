@@ -37,13 +37,11 @@ function StocksCtrl($scope, $http, $q) {
       SELECT_QUERY_PART1 + symbol + SELECT_QUERY_PART2 +
       QUERY_PROPERTIES;
 
-    /*
-    $http.json(url).then(function (response) {
+    $http.get(url).then(function (response) {
       if (response.status == 200) {
         console.log(response);
       }
     });
-    */
 
   } // end doTest
 
