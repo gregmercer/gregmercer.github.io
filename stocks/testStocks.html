@@ -31,7 +31,7 @@ function StocksCtrl($scope, $http, $q) {
     var SELECT_QUERY_PART1 =
       "q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Fwww.marketwatch.com%2Finvesting%2Fstock%2F";
     var SELECT_QUERY_PART2 =
-      "%2Fprintchart'%20&format=json&diagnostics=true&callback=";
+      "%2Fprintchart'%20&diagnostics=true&callback=";
 
     var url = YAHOO_QUERYAPI_URL +
       SELECT_QUERY_PART1 + symbol + SELECT_QUERY_PART2 +
