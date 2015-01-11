@@ -34,7 +34,7 @@
       </thead>
       <tbody>
       <tr ng-repeat="quote in quotes track by quote.Symbol" ts-repeat>
-        <td><input type="checkbox" name="" ng-click="refreshHeadlines($event, quote.Symbol);refreshCharts($event, quote.Symbol);"></td>
+        <td><input type="checkbox" name="" ng-click="refreshHeadlines($event, quote.Symbol);refreshCharts($event, quote.Symbol,true);"></td>
         <td>{{quote.Name}}</td>
         <td>{{quote.Symbol}}</td>
         <td>{{quote.Change}}</td>
@@ -137,8 +137,8 @@ function StocksCtrl($scope, $http, $q, headlinesService, chartsService, vansServ
       });
   } // end refreshHeadlines
 
-  $scope.refreshCharts = function(event, symbol) {
-    chartsService.refreshCharts(event, symbol)
+  $scope.refreshCharts = function(event, symbol, isFund) {
+    chartsService.refreshCharts(event, symbol, isFund)
       .then(function(charts) {
         $scope.charts = charts;
       });
