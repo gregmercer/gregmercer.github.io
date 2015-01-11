@@ -69,8 +69,8 @@ headlinesModule.service('headlinesService', function($http, $q) {
 
     return $http.jsonp(url).then(function (response) {
       var headlines = [];
-      if (response.status == 200) {
-        var results = response.data.query.results;
+      if (response.status == 200 && response.data.query.results.a) {
+        var results = response.data.query.results.a;
         for (var index = 0; index < results.length; index++) {
           headlines[headlines.length] = {
             symbol: symbol,
