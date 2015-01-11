@@ -5,6 +5,7 @@
   <script src="js/utils.js"></script>
   <script src="js/angular-tablesort.js"></script>
   <script src="js/headlines.js"></script>
+  <script src="js/charts.js"></script>
   <script src="js/etfs.js"></script>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html">
@@ -33,7 +34,7 @@
       </thead>
       <tbody>
       <tr ng-repeat="quote in quotes track by quote.Symbol" ts-repeat>
-        <td><input type="checkbox" name="" ng-click="refreshHeadlines($event, quote.Symbol)"></td>
+        <td><input type="checkbox" name="" ng-click="refreshDetails($event, quote.Symbol)"></td>
         <td>{{quote.Name}}</td>
         <td>{{quote.Symbol}}</td>
         <td>{{quote.Change}}</td>
@@ -56,15 +57,24 @@
   </ul>
 </div>
 
+</br>
+
+<div>
+  <ul ng-repeat="chart in charts">
+    <li><img src="{{chart.src}}">/li>
+    <li>&nbsp;</li>
+  </ul>
+</div>
+
 <script>
 
 var YAHOO_QUERYAPI_URL = 'http://query.yahooapis.com/v1/public/yql?';
 var SELECT_QUERY = 'q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20';
 var QUERY_PROPERTIES = '&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=JSON_CALLBACK';
 
-var stocksApp = angular.module( 'stocksApp', ['tableSort', 'headlinesService', 'etfsService'] );
+var stocksApp = angular.module( 'stocksApp', ['tableSort', 'headlinesService', 'chartsService', 'etfsService'] );
 
-function StocksCtrl($scope, $http, $q, headlinesService, etfsService) {
+function StocksCtrl($scope, $http, $q, headlinesService, chartsService, etfsService) {
 
   $scope.getStockInfo = function () {
     var symbols = $scope.loadSymbols(etfsService.getData());
@@ -118,12 +128,25 @@ function StocksCtrl($scope, $http, $q, headlinesService, etfsService) {
 
   } // end getQuotes
 
+  $scope.refreshDetails = function(event, symbol) {
+    var isFund = true;
+    $scope.refreshHeadlines(event, symbol);
+    $scope.refreshCharts(event, symbol, isFund);
+  } // end refreshDetails
+
   $scope.refreshHeadlines = function(event, symbol) {
     headlinesService.refreshHeadlines(event, symbol)
       .then(function(headlines) {
         $scope.headlines = headlines;
       });
   } // end refreshHeadlines
+
+  $scope.refreshCharts = function(event, symbol, isFund) {
+    chartsService.refreshCharts(event, symbol, isFund)
+      .then(function(charts) {
+        $scope.charts = charts;
+      });
+  } // end refreshCharts
 
 }
 </script>
