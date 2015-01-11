@@ -12,6 +12,8 @@
 <body ng-controller="StocksCtrl">
 
 <div id="w" ng-init="doTest();">
+  <img src="{{chartImage}}"/>
+  <img style="-webkit-user-select: none; cursor: zoom-in;" src="{{chartImage}}" width="163" height="150">
 </div>
 
 <script>
@@ -40,6 +42,7 @@ function StocksCtrl($scope, $http, $q) {
     $http.get(url).then(function (response) {
       if (response.status == 200) {
         console.log(response.data.query.results.body.div.img.src);
+        $scope.chartImage = response.data.query.results.body.div.img.src;
       }
     });
 
