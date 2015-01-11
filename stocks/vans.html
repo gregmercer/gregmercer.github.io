@@ -132,8 +132,8 @@ function StocksCtrl($scope, $http, $q, headlinesService, chartsService, vansServ
 
   $scope.refreshDetails = function(event, symbol) {
     var isFund = true;
-    refreshHeadlines(event, symbol);
-    refreshCharts(event, symbol, isFund);
+    $scope.refreshHeadlines(event, symbol);
+    $scope.refreshCharts(event, symbol, isFund);
   } // end refreshDetails
 
   $scope.refreshHeadlines = function(event, symbol) {
