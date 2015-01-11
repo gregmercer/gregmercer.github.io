@@ -62,15 +62,11 @@ chartsModule.service('chartsService', function($http, $q) {
       var charts = [];
       if (response.status == 200) {
         console.log(response.data.query.results);
-        /*
-        var results = response.data.query.results.a;
-        for (var index = 0; index < results.length; index++) {
-          charts[charts.length] = {
-            symbol: symbol,
-            src: results.body.div.img.src
-          }
+        var results = response.data.query.results;
+        charts[charts.length] = {
+          symbol: symbol,
+          src: results.body.div.img.src
         }
-        */
       }
       return charts;
     });
