@@ -29,6 +29,9 @@ function StocksCtrl($scope, $http, $q) {
 
     var symbol = 'IBM';
 
+    // get 'printer-friendly version of this page'
+    // http://www.marketwatch.com/investing/stock/ibm/charts?symb=IBM&countrycode=US&time=8&startdate=1%2F4%2F1999&enddate=1%2F10%2F2015&freq=1&compidx=none&compind=none&comptemptext=Enter+Symbol%28s%29&comp=none&uf=0&ma=1&maval=200&lf=1&lf2=16777216&lf3=33554432&type=2&size=2&style=1013
+
     var SELECT_QUERY_PART1 =
       "q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Fwww.marketwatch.com%2Finvesting%2Fstock%2F";
     var SELECT_QUERY_PART2 =
