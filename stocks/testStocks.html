@@ -1,0 +1,52 @@
+<!doctype html>
+<html ng-app="stocksApp">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html">
+  <title>Test Page</title>
+  <link rel="stylesheet" type="text/css" media="all" href="../css/styles.css">
+  <link rel="stylesheet" type="text/css" media="all" href="../css/tablesort.css">
+</head>
+
+<body ng-controller="StocksCtrl">
+
+<div id="w" ng-init="doTest();">
+</div>
+
+<script>
+
+var YAHOO_QUERYAPI_URL = 'http://query.yahooapis.com/v1/public/yql?';
+var SELECT_QUERY = 'q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20';
+var QUERY_PROPERTIES = '&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=JSON_CALLBACK';
+
+var stocksApp = angular.module( 'stocksApp', [] );
+
+function StocksCtrl($scope, $http, $q) {
+
+  $scope.doTest = function () {
+
+    var symbol = 'YHOO';
+
+    var SELECT_QUERY_PART1 =
+      "q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Fwww.marketwatch.com%2Finvesting%2Fstock%2F";
+    var SELECT_QUERY_PART2 =
+      "%2Fprintchart'%20&format=json&diagnostics=true&callback=";
+
+    var url = YAHOO_QUERYAPI_URL +
+      SELECT_QUERY_PART1 + symbol + SELECT_QUERY_PART2 +
+      QUERY_PROPERTIES;
+
+    $http.jsonp(url).then(function (response) {
+      if (response.status == 200) {
+        console.log(response);
+      }
+    });
+
+  } // end doTest
+
+}
+</script>
+
+</body>
+</html>
