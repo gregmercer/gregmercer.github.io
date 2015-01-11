@@ -39,7 +39,7 @@ function StocksCtrl($scope, $http, $q) {
 
     $http.json(url).then(function (response) {
       if (response.status == 200) {
-        console.log(response.data.query);
+        console.log(response.data);
       }
     });
 
