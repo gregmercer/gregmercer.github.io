@@ -10,6 +10,8 @@ watchModule.service('watchStocksService', function(){
       {symbol: "HIBB"},
       {symbol: "GILD"},
       {symbol: "FLR"},
+      {symbol: "SLAB"},
+      {symbol: "ATML"},
       {symbol: "IBM"}
     ];
     return symbols;
