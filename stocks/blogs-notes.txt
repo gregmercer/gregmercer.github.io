@@ -3,22 +3,23 @@ patentlyapple.com
 cultofmac.com
 onstartups.com
 industryweek.com
-blog.tomerslin.com
-ilpubs.s.sdu:8090
+blog.tomerslin.com (?)
+ilpubs.stanford.edu:8090
 searchenginewatch.com
 stopdesign.com
+avc.com
+www.bhorowitz.com
+blog.pmarca.com
 blogs.ft.com/fttechhub
-static.googleusercontent.com
+static.googleusercontent.com (?)
 livemint.com
 macobserver.com
 ifoapplestore.com
 weblogs.jupiterresearch.com
 arstechnica.com
 macdailynews.com
-media.coporate-ir.net
 european-rhetoric.com
 martybarrett.com
-library.corporate-ir.net
 communities-dominate.blogs.com
 asymco.com
 radar.oreilly.com
