@@ -6,6 +6,7 @@ watchModule.service('watchStocksService', function(){
       {symbol: "AAPL"},
       {symbol: "GOOG"},
       {symbol: "ORCL"},
+      {symbol: "DVA"},
       {symbol: "NOV"},
       {symbol: "SLB"},
       {symbol: "HIBB"},
