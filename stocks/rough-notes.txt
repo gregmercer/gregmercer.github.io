@@ -1,0 +1,130 @@
+Investing
+
+Stock Evaluation
+
+High margins
+High ROE, ROA, ROIC
+Market leader
+Lead by founder, dominant, driven
+Growing revenues, profits
+Growing market, industry
+Declining shares outstanding
+Key new sources
+Key business areas
+Solving a big problem for its customers
+Subscriptions, Recurring revenues
+Key patents
+Network effect, growing customer base
+Customer stickiness, high switching costs
+Little or no need for debt
+Low capital expenditure needs
+Raving fans: positive word of mouth from customers, repeat purchases
+Well-managed: return on equity of 15% or greater in past year?
+Goliath: free from disruptive upstarts
+Initiatives to reduce seasonality
+Certainty in expansion plans 
+Small number of employees
+The toothbrush test: Is it something you will use once or twice a day, and does it make your life better?
+
+Industry Attractiveness 
+This first Foolish criterion measures the attractiveness of the industry in which a company operates. An industry's potential, its challenges, and its characteristics, including the quality of its sales (for example, how high are average gross profits on every dollar of revenue for the industry?) all figure in our rating of this criterion. This criterion is rated one to four jester caps based on an industry's long-term growth potential, its viability, its average or potential profitability, the ability for a company in the industry to expand its business, and so forth. You want to invest in companies that, above all, operate in extremely attractive and, if not profitable, then soon-to-be-profitable, growing industries. This criterion helps you to determine which companies are in the most promising industries for investors.
+
+Position in Industry 
+Once you've found an attractive industry in which to invest, the next important step is to find a company that is very well positioned within that industry. This rating helps you to weed out the third-tier players in an industry, because Position in Industry measures where a company stands in its industry. As Fools, we typically like to invest in only the leading one or two top companies in an industry, nothing less. Is it the top dog, leading the pack (with the highest sales growth, market share, mindshare, and so forth)? Or is it a mere follower? Only true industry leaders (if not outright dominators) are granted the highest rating.
+
+Business Quality 
+Once you've found a strong industry and a leading company in that industry, you still need to make certain that the company has a high-quality business. Our Business Quality rating addresses the economics and management behind a business, including its profitability, its growth avenues and future opportunities; its competitive position; its management's experience, expertise, and history; and much more. How profitable can a business become? What is the potential long-term return on investment for the business? Can the assets of the business eventually be leveraged into new growth opportunities? Does the company have sustainable competitive advantages? Business quality is arguably much more important than valuation concerns for a long-term investor. The quality of a business drives the cash flow-generating capacity, which ultimately controls the stock price. This rating (and our report's coinciding analysis) helps you to spot and learn about the highest-quality businesses listed on the stock market.
+
+Investment Predictability 
+Investment Predictability takes into account the stability of a business in order to help you determine the risk that you may, or may not, face. Older, mature businesses with steady, predictable streams of cash flow (specifically, operating and net earnings) will be rated much higher in predictability than will young, sporadic, and volatile companies, the future earnings of which are difficult to predict, thereby increasing your risks. Investment Predictability essentially encapsulates all the qualities presented in our first three Foolish criteria, and then tells us how likely it is that a certain investment outcome will occur.
+
+Overall Prospects 
+Probably the most self-explanatory of our Foolish criteria, Overall Prospects wraps up the whole enchilada, from industry attractiveness to a company's business quality and competitive position, from management to a company's valuation on the stock market. All of this and more combines to create an Overall Prospects rating for the company. Essentially, the conclusion derived from the full report on the company goes into this final rating. The higher the rating, the more attractive we believe the investment.
+
+SEC searches
+http://10kwizard.com/
+http://www.secinfo.com/
+
+Bio Tech Research
+http://www.fiercebiotech.com/
+
+Book
+The Warren Buffetts Next Door: The World's Greatest Investors You've Never Heard Of and What You Can Learn From Them
+by Matthew Schifrin
+
+Stock App
+http://www.gummy-stuff.org/Yahoo-data.htm
+$url = "http://finance.yahoo.com/d/quotes.csv?f=sl1d1t1c1ohgv&s=";
+http://finance.yahoo.com/q/hp?s=WDAY&a=09&b=12&c=2012&d=09&e=1&f=2013&g=w
+
+Fast Graphs
+http://www.fastgraphs.com
+
+Sites related to Apple
+http://www.macobserver.com
+
+Small-cap value equity funds worth checking out
+GTCSX
+
+Notes from 'How to Read A Financial Report' John A. Tracy
+
+Sales Revenue / Accts Receivable = x times
+52 weeks / x times = y weeks (to turn Accts Receivable into Cash)
+
+example:
+10.4m Sales Revenue / 1m Accts Receivable = 10.4 times
+52 weeks / 10.4 times = 5 weeks
+
+Cost of Goods Sold Expense / Inventory = x times
+52 weeks / x times = y weeks (number of weeks to sell inventory) <-- (a*)
+
+Inventory / Accts Payable = x times
+Number weeks to Sell Inventory / x times = y weeks (number of weeks before inventory paid)
+
+example:
+1.690m Inventory / 520k Accts Payable - Inventory = 3.25 times
+6.760m Cost of Goods Sold Expense / 1.690 Inventory = 4 times
+52 weeks / 4 times = 13 weeks (number of weeks to sell inventory)
+13 weeks / 3.25 times = 4 (number of weeks before inventory paid)
+so… this tells us the first 4 weeks of the 13 are 'free ride' to the company and only paid after the 4th week, the remaining 9 weeks need to be financed.
+
+Operating Expenses / Prepaid Expenses = x times
+52 weeks / x times = y weeks (Prepaid Expenses balance is y weeks of annual Operating Expenses)
+
+Operating Expenses / Accrued Operating Expenses = x times
+52 weeks / x times = y weeks (Accrued Operating Expenses
+ balance is y weeks of annual Operating Expenses)
+
+Current Ratio:
+Current Assets / Current Liabilities (general rule should be 2 to 1 or higher to be safe)
+
+Acid Test (Quick Ratio):
+Cash + Accts Receivable / Current Liabilites  (general rule should be 1 to 1 or higher to be safe)
+
+Debt To Equity Ratio:
+Total Liabilities / Total Shareholders' Equity  (general rule stay below 1 to 1)
+
+Times Interest Earned Ratio:
+Operating Earnings / Interest Expense (should be higher than 1 to 1)
+
+Return on Sales:
+Net Income / Sales Revenue
+
+Return on Equity:
+Net Income / Total Shareholders' Equity ( NI / SE see next few lines )
+
+Leverage = Total Assets / Total Shareholders' Equity
+Turn = Sales Revenue / Total Assets
+Margin = Net Income / Sales Revenue
+
+ROE = Leverage x Turn x Margin
+ROE = (TA / SE) x (SR / TA) x (NI / SR)
+ROE = NI / SE
+
+Return on Assets:
+Operating Earnings / Total Assets
+
+Earnings Per Share:
+Net Income / Outstanding Common Shares
+
+
