@@ -15,6 +15,7 @@ watchModule.service('watchStocksService', function(){
       {symbol: "SLAB"},
       {symbol: "ATML"},
       {symbol: "ANSS"},
+      {symbol: "ZTS"},
       {symbol: "IBM"}
     ];
     return symbols;
