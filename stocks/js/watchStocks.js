@@ -25,6 +25,7 @@ watchModule.service('watchStocksService', function(){
       {symbol: "MSCI"},
       {symbol: "CHRW"},
       {symbol: "JKHY"},
+      {symbol: "COST"},
       {symbol: "V"},
       {symbol: "MA"},
       {symbol: "IBM"}
