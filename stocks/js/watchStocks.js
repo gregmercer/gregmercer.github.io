@@ -18,6 +18,7 @@ watchModule.service('watchStocksService', function(){
       {symbol: "ZTS"},
       {symbol: "CSGP"},
       {symbol: "ALGN"},
+      {symbol: "ESRX"},
       {symbol: "IBM"}
     ];
     return symbols;
