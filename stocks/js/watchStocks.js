@@ -5,6 +5,8 @@ watchModule.service('watchStocksService', function(){
     var symbols = [
       {symbol: "AAPL"},
       {symbol: "GOOG"},
+      {symbol: "AMZN"},
+      {symbol: "FB"},
       {symbol: "ORCL"},
       {symbol: "DVA"},
       {symbol: "NOV"},
@@ -28,6 +30,7 @@ watchModule.service('watchStocksService', function(){
       {symbol: "COST"},
       {symbol: "V"},
       {symbol: "MA"},
+      {symbol: "PX"},
       {symbol: "IBM"}
     ];
     return symbols;
