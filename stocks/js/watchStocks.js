@@ -34,6 +34,7 @@ watchModule.service('watchStocksService', function(){
       {symbol: "MDLZ"},
       {symbol: "ARMH"},
       {symbol: "VMC"},
+      {symbol: "MLM"},
       {symbol: "IBM"}
     ];
     return symbols;
