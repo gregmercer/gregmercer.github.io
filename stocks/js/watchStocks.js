@@ -21,7 +21,7 @@ watchModule.service('watchStocksService', function(){
       {symbol: "CSGP"},
       {symbol: "ALGN"},
       {symbol: "ESRX"},
-      {symbol: "MSCI"},
+      //{symbol: "MSCI"},
       {symbol: "EXPD"},
       {symbol: "FAST"},
       {symbol: "MSCI"},
@@ -31,8 +31,8 @@ watchModule.service('watchStocksService', function(){
       {symbol: "V"},
       {symbol: "MA"},
       {symbol: "PX"},
-      //{symbol: "MDLZ"},
-      //{symbol: "ARMH"},
+      {symbol: "MDLZ"},
+      {symbol: "ARMH"},
       {symbol: "IBM"}
     ];
     return symbols;
