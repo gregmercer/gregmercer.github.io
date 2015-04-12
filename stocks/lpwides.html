@@ -1,0 +1,157 @@
+<!doctype html>
+<html ng-app="stocksApp">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/angular-tablesort.js"></script>
+  <script src="js/headlines.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/lpwides.js"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html">
+  <title>Low Priced Wide Moat Stocks</title>
+  <link rel="stylesheet" type="text/css" media="all" href="../css/styles.css">
+  <link rel="stylesheet" type="text/css" media="all" href="../css/tablesort.css">
+</head>
+
+<body ng-controller="StocksCtrl">
+
+<div id="w" ng-init="getStockInfo();">
+  <div ng-show="loaded">
+    <p><strong>Low Priced Wide Moat Stocks:</strong></p>
+    <table border="1" ts-wrapper>
+      <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th ts-criteria="Name|lowercase" ts-default>Name</th>
+        <th ts-criteria="Symbol|lowercase">Symbol</th>
+        <th ts-criteria="Change|parseFloat">Change</th>
+        <th ts-criteria="Price|parseFloat" align="right">Price</th>
+        <th ts-criteria="PercentChange|parseFloat" align="right">&nbsp;&nbsp;&nbsp;&nbsp;% Change</th>
+        <th align="right">Yr Range</th>
+        <th ts-criteria="YearPercentChange|parseFloat" align="right">&nbsp;&nbsp;&nbsp;&nbsp;% From Hi</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="quote in quotes track by quote.Symbol" ts-repeat>
+        <td><input type="checkbox" name="" ng-click="refreshDetails($event, quote.Symbol)"></td>
+        <td>{{quote.Name}}</td>
+        <td>{{quote.Symbol}}</td>
+        <td>{{quote.Change}}</td>
+        <td align="right">{{quote.Price | currency}}</td>
+        <td align="right">{{quote.PercentChange}}</td>
+        <td align="right">{{quote.YearRange}}</td>
+        <td align="right">{{quote.YearPercentChange}}</td>
+      </tr>
+      </tbody>
+    </table>
+  <div>
+</div>
+
+</br>
+
+<div>
+  <ul ng-repeat="headline in headlines">
+    <li><a href="{{headline.href}}" target='_blank'>({{headline.symbol}}) {{headline.content}}</a></li>
+    <li>&nbsp;</li>
+  </ul>
+</div>
+
+</br>
+
+<div>
+  <ul ng-repeat="chart in charts">
+    <li><img src="{{chart.src}}">/li>
+    <li>&nbsp;</li>
+  </ul>
+</div>
+
+<script>
+
+var YAHOO_QUERYAPI_URL = 'http://query.yahooapis.com/v1/public/yql?';
+var SELECT_QUERY = 'q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20';
+var QUERY_PROPERTIES = '&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=JSON_CALLBACK';
+
+var stocksApp = angular.module( 'stocksApp', ['tableSort', 'headlinesService', 'chartsService', 'lpwidesService'] );
+
+function StocksCtrl($scope, $http, $q, headlinesService, chartsService, lpwidesService) {
+
+  $scope.getStockInfo = function () {
+    var symbols = $scope.loadSymbols(lpwidesService.getData());
+    $scope.quotes = $scope.getQuotes(symbols);
+    $scope.loaded = true;
+    $scope.headlines = [];
+    $scope.charts = [];
+  } // end getStockInfo
+
+  $scope.loadSymbols = function(stockList) {
+    //var symbols = 'YHOO%22%2C%22AAPL%22%2C%22GOOG%22%2C%22MSFT%22';
+    var symbols = '';
+    for (var index = 0; index < stockList.length; index++) {
+      symbols += stockList[index].symbol;
+      if (index == stockList.length - 1) {
+        symbols += '%22';
+      } else {
+        symbols += '%22%2C%22';
+      }
+    }
+    return symbols;
+  } // end loadSymbols
+
+  $scope.getQuotes = function(symbols) {
+
+    var url = YAHOO_QUERYAPI_URL + SELECT_QUERY + '(%22' + symbols + ')' + QUERY_PROPERTIES;
+    //var url = 'http://angularjs.org/greet.php?callback=JSON_CALLBACK&name=Super%20Hero';
+
+    var quotes = [];
+
+    $http.jsonp(url).success(function (data, status, headers, config) {
+      var results = data.query.results.quote;
+      for (var index = 0; index < results.length; index++) {
+        var quote = results[index];
+        console.log(quote);
+        quotes[quotes.length] = {
+          Name: quote.Name,
+          Symbol: quote.symbol,
+          Change: quote.Change,
+          PercentChange: quote.PercentChange,
+          Price: quote.LastTradePriceOnly,
+          YearRange: quote.YearRange,
+          YearPercentChange: quote.PercebtChangeFromYearHigh
+        };
+      }
+      $scope.quotes = quotes;
+    }).error(function (data, status, headers, config) {
+      console.log('in error');
+      console.log(status);
+    });
+
+    return quotes;
+
+  } // end getQuotes
+
+  $scope.refreshDetails = function(event, symbol) {
+    var isFund = true;
+    $scope.refreshHeadlines(event, symbol);
+    $scope.refreshCharts(event, symbol, isFund);
+  } // end refreshDetails
+
+  $scope.refreshHeadlines = function(event, symbol) {
+    headlinesService.refreshHeadlines(event, symbol)
+      .then(function(headlines) {
+        $scope.headlines = headlines;
+      });
+  } // end refreshHeadlines
+
+  $scope.refreshCharts = function(event, symbol, isFund) {
+    chartsService.refreshCharts(event, symbol, isFund)
+      .then(function(charts) {
+        $scope.charts = charts;
+      });
+  } // end refreshCharts
+
+}
+</script>
+
+</body>
+</html>
