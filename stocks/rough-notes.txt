@@ -52,6 +52,9 @@ Book
 The Warren Buffetts Next Door: The World's Greatest Investors You've Never Heard Of and What You Can Learn From Them
 by Matthew Schifrin
 
+Oaktree Memos from Howard Marks
+http://www.oaktreecapital.com/memo.aspx
+
 Stock App
 http://www.gummy-stuff.org/Yahoo-data.htm
 $url = "http://finance.yahoo.com/d/quotes.csv?f=sl1d1t1c1ohgv&s=";
