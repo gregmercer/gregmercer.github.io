@@ -136,7 +136,7 @@ Days Sales Outstanding (DSO):
 DSO = 91.25 * (accounts receiveable / quarterly revenue) 
 
 Days in Deferred Revenue (DDR):
-DDR = (91.25 * deferred revenue) / quarterly revenue
+DDR = 91.25 * (deferred revenue / quarterly revenue)
 
 Relationship between DSO and DDR:
 DSO - DDR is bad if this is increasing (meaning less deferred revenue, and more credit extended to customers).
@@ -144,6 +144,8 @@ DSO - DDR is bad if this is increasing (meaning less deferred revenue, and more 
 Relationship between Accounts Receiveable(A/R) and Revenue:
 Bad if A/R is very high as a percent of Revenue
 
+Days Sales in Inventory (DSI):
+DSI = 91.25 * (inventory / quarterly cost of goods sold)
 
 
 
