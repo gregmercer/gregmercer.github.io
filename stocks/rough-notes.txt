@@ -127,10 +127,10 @@ Operating Earnings / Total Assets
 Earnings Per Share:
 Net Income / Outstanding Common Shares
 
-Other Financial Formulas:
-
-What's Behind the Numbers? A Guide to Exposing Financial Chicanery and Avoiding Huge Losses in Your Portfolio
+Notes from: What's Behind the Numbers? A Guide to Exposing Financial Chicanery and Avoiding Huge Losses in Your Portfolio
 By: John Del Vecchio; Tom Jacobs
+
+Other Financial Formulas:
 
 Days Sales Outstanding (DSO):
 DSO = 91.25 * (accounts receiveable / quarterly revenue) 
@@ -147,5 +147,11 @@ Bad if A/R is very high as a percent of Revenue
 Days Sales in Inventory (DSI):
 DSI = 91.25 * (inventory / quarterly cost of goods sold)
 
+Boosting Earnings:
 
+If management lengthens the depreciation and amortization (D&A) period, it reduces operating expenses, boosting EPS.
+
+If the percentage of allowance for doubtful accounts drops sharply relative to gross accounts receivable, it may indicate an artificial boost to revenues and, therefore, earnings.
+
+If goodwill and intangibles are large as a percentage of total assets, it could mean that assets are overvalued due to acquisitions.
 
