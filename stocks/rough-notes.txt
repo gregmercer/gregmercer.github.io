@@ -161,3 +161,41 @@ If goodwill and intangibles are large as a percentage of total assets, it could 
 Morningstar Analysis:
 http://analysisreport.morningstar.com/stock/research?region=USA&culture=en-US&productcode=MLE&t=wmt
 
+Book Notes: 'The Manager's Guide to Financial Statement Analysis' - Jablonsky, Barsky
+
+Figures
+1.2 pg 6 Balance Sheet
+1.3 pg 7 Income Statement
+1.4 pg 18 Profit Model
+2.2 pg 32 Profit Margin
+3.2 pg 45 Asset Turnover
+4.1 pg 60 Return on Assets
+5.2 pg 71 Financial Leverage
+
+Key Elements pg 17 
+NS - Net Sales
+NI - Net Income
+TA - Total Assets
+SE - Shareholder's Equity
+
+ROE - Return on Equity
+ROE = FL x RA (see below)
+    = TA/SE x NI/TA
+    = NI/SE
+    
+FL = Financial Leverage
+   = TA/SE
+   
+RA = Return on Assets
+   = PM x AT (see below)
+   = NI/NS x NS/TA
+   = NI/TA
+   
+PM = Profit Margin
+   = NI/NS
+   
+AT = Asset Turnover
+   = NS/TA
+   
+ 
+
