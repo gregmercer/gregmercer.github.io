@@ -4,6 +4,8 @@ Rock, Paper, Scissors: Game Theory in Everyday Life - Len Fisher
 
 7 Deadly Dilemmas
 
+The Prisoners Dilemma is just one of many social dilemmas we come up against in our attempts to cooperate. Seven of these are particularly damaging, and game theorists have given each an evocative name. One is the Prisoner's Dilemma.
+
 The Tragedy of the Commons, which is logically equivalent to a series of Prisoner's Dilemmas played out between different pairs of people in a group.
  
 The Free Rider problem (a variant of the Tragedy of the Commons), which arises when people take advantage of a community resource without contributing to it.
