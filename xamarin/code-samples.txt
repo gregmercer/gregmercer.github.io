@@ -1,0 +1,1555 @@
+
+===> code listed in: ./and101-intro-to-xamarin-android/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./and101-intro-to-xamarin-android/Lab Materials/parts/part2.html
+
+..
+
+[Activity(Label = "TipCalculator", MainLauncher = true, Icon = "@mipmap/icon")]
+public class MainActivity : Activity
+{
+  protected override void OnCreate(Bundle bundle)
+  {
+    base.OnCreate(bundle);
+    SetContentView(Resource.Layout.Main);
+  }
+}
+
+..
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android        ="http://schemas.android.com/apk/res/android"
+  android:orientation  ="vertical"
+  android:layout_width ="match_parent"
+  android:layout_height="match_parent">
+  ...
+</LinearLayout>
+
+..
+
+<EditText
+  android:layout_width ="match_parent"
+  android:layout_height="wrap_content" />
+
+..
+
+<Button
+  android:layout_width ="match_parent"
+  android:layout_height="wrap_content" 
+  android:text         ="CALCULATE" />
+
+..
+
+<LinearLayout ... >
+
+  <EditText ... />
+  <Button   ... />
+
+  <LinearLayout ...>
+    <TextView ... />
+    <TextView ... />
+  </LinearLayout>
+
+  <LinearLayout ...>
+    <TextView ... />
+    <TextView ... />
+  </LinearLayout>
+
+</LinearLayout>
+
+
+===> code listed in: ./and101-intro-to-xamarin-android/Lab Materials/parts/part3.html
+
+..
+
+<EditText
+  android:id="@+id/inputBill"
+  android:layout_width ="match_parent"
+  android:layout_height="wrap_content" />
+
+..
+
+EditText inputBill;
+Button   calculateButton;
+TextView outputTip;
+TextView outputTotal;
+
+..
+
+public class MainActivity : Activity
+{
+  EditText inputBill;
+  ...
+
+  protected override void OnCreate(Bundle bundle)
+  {
+    base.OnCreate(bundle);
+    SetContentView(Resource.Layout.Main);
+
+    inputBill = FindViewById<EditText>(Resource.Id.inputBill);
+    ...
+  }
+}
+
+..
+
+void OnCalculateClick(object sender, EventArgs e)
+{
+  string text = inputBill.Text;
+  ...
+}
+
+..
+
+android:layout_marginRight="20dp"
+
+
+===> code listed in: ./and101-intro-to-xamarin-android/Lab Materials/parts/part4.html
+
+
+===> code listed in: ./and102-activities-intents/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./and102-activities-intents/Lab Materials/parts/part2.html
+
+..
+
+var intent = new Intent(this, typeof(ItemsActivity));
+StartActivity(intent);
+
+..
+
+StartActivity(typeof(AboutActivity));
+
+
+===> code listed in: ./and102-activities-intents/Lab Materials/parts/part3.html
+
+..
+
+void OnCancelClick(object sender, EventArgs e)
+{
+  Finish();
+}
+
+
+===> code listed in: ./and102-activities-intents/Lab Materials/parts/part4.html
+
+..
+
+var intent = new Intent(this, typeof(DetailsActivity));
+
+..
+
+void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
+{
+  int position = e.Position;
+  var intent = new Intent(this, typeof(DetailsActivity));
+  intent.PutExtra("ItemPosition", position);
+}
+
+..
+
+public class DetailsActivity : Activity
+{
+  protected override void OnCreate(Bundle bundle)
+  {
+    ...
+    int position = Intent.GetIntExtra("ItemPosition", -1);
+    ...
+  }
+}
+
+
+===> code listed in: ./and102-activities-intents/Lab Materials/parts/part5.html
+
+..
+
+var intent = new Intent();
+
+..
+
+void OnSaveClick(object sender, EventArgs e)
+{
+  string name  = FindViewById<EditText>(Resource.Id.nameInput).Text;
+  int    count = int.Parse(FindViewById<EditText>(Resource.Id.countInput).Text);
+
+  var intent = new Intent();
+
+  intent.PutExtra("ItemName",  name );
+  intent.PutExtra("ItemCount", count);
+  ...
+}
+
+..
+
+void OnSaveClick(object sender, EventArgs e)
+{
+  ...
+  SetResult(Result.Ok, intent);
+  ...
+}
+
+..
+
+void OnAddItemClick(object sender, EventArgs e)
+{
+  var intent = new Intent(this, typeof(AddItemActivity));
+  StartActivityForResult(intent, 100);
+}
+
+..
+
+if (requestCode == 100 && resultCode == Result.Ok)
+{
+  ...
+}
+
+..
+
+string name  = data.GetStringExtra("ItemName");
+int    count = data.GetIntExtra   ("ItemCount", -1);
+
+..
+
+Items.Add(new Item(name, count));
+
+
+===> code listed in: ./and102-activities-intents/Lab Materials/parts/part6.html
+
+..
+
+var intent = new Intent();
+intent.SetAction(Intent.ActionView);
+intent.SetData(Android.Net.Uri.Parse("http://www.xamarin.com"));
+
+
+===> code listed in: ./and110-list-views-and-adapters-in-android/Lab Materials/parts/part1.html
+
+..
+
+var adapter = new ArrayAdapter<MyDataClassType>(
+	this,          // Context
+	LayoutFileId,  // Resource id of Layout
+	IEnumerable<MyDataClassType>); // Collection of T
+
+..
+
+int count = 1;
+...
+Button button = FindViewById<button>(Resource.Id.MyButton);
+button.Click += delegate { button.Text = string.Format("{0} clicks!", count++); };
+
+
+===> code listed in: ./and110-list-views-and-adapters-in-android/Lab Materials/parts/part2.html
+
+..
+
+var dialog = new AlertDialog.Builder(this);
+dialog.SetMessage("My Message");
+dialog.SetNeutralButton("My Button Label", 
+  delegate
+  {
+    ...
+  });
+dialog.Show();
+
+
+===> code listed in: ./and110-list-views-and-adapters-in-android/Lab Materials/parts/part3.html
+
+..
+
+<TextView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@android:id/text1"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:textappearance="?android:attr/textAppearanceListItemSmall"
+  android:gravity="center_vertical"
+  android:paddingstart="?android:attr/listPreferredItemPaddingStart"
+  android:paddingend="?android:attr/listPreferredItemPaddingEnd"
+  android:minheight="?android:attr/listPreferredItemHeightSmall" />
+
+..
+
+public virtual View Inflate(int resource, ViewGroup root, bool attachToRoot);
+
+..
+
+var inflater = LayoutInflater.From(parent.Context); // get an inflater from a Context
+View row = inflater.Inflate(Resource.Layout.MyRowLayout, parent, false);
+
+..
+
+public abstract class BaseAdapter<T> : BaseAdapter
+{
+  //
+  // Create a row. Populate the row with your data at 'position' 
+  // in your list. Return the new row.
+  //
+  public abstract View GetView(int position, View convertView, ViewGroup parent);
+
+  //
+  // Return the code-behind data object at the given position.
+  // The ListView class has a GetItemAtPosition method, when you call
+  // that method on the ListView, it calls this indexer on your adapter
+  // to get the code-behind object.
+  //
+  public abstract T this[int position] { get; }
+
+  //
+  // Number of items in your collection.
+  //
+  public abstract int Count { get; }
+
+  //
+  // Return the 'id' of the item at the given position.
+  // You decide on the ids you want to use, in simple cases you can use the
+  // item's position in the list as its id. The value you return here will be
+  // passed as part of the event args to click events so it needs to be
+  // something your code can use to locate the item.
+  //
+  public abstract long GetItemId(int position);
+
+  ...
+}
+
+..
+
+public abstract T this[int position] { get; }
+
+..
+
+public abstract int Count { get; }
+
+..
+
+public abstract long GetItemId(int position);
+
+..
+
+public abstract View GetView(int position, View convertView, ViewGroup parent);
+
+..
+
+string url = "images/myPhoto.jpg"; // path is relative to the project's Assets folder
+var drawable = Drawable.CreateFromStream(parent.Context.Assets.Open(url), null);
+
+
+===> code listed in: ./and110-list-views-and-adapters-in-android/Lab Materials/parts/part4.html
+
+
+===> code listed in: ./and110-list-views-and-adapters-in-android/Lab Materials/parts/part5.html
+
+..
+
+myListView.FastScrollEnabled = true;
+
+..
+
+public static class SectionIndexerBuilder
+{
+  // builds an array of unique section headers, data must be sorted by name
+  public static Java.Lang.Object[] BuildSectionHeaders(List<Instructor> data) ...
+
+  // builds a map to answer: position --> section, data must be sorted by name
+  public static Dictionary<int, int> BuildSectionForPositionMap(
+     List<Instructor> instructors) ...
+
+  // builds a map to answer: section --> position, data must be sorted by name
+  public static Dictionary<int, int> BuildPositionForSectionMap(
+     List<Instructor> instructors) ...
+}
+
+
+===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part3.html
+
+..
+
+<TextView
+  android:id                      ="@+id/nameTextView"
+  android:layout_alignParentBottom="true"
+  android:textAppearance          ="?android:attr/textAppearanceLarge"
+  android:layout_marginLeft       ="16dp"
+  android:layout_marginRight      ="16dp"
+  android:layout_width            ="200dp"
+  android:layout_height           ="wrap_content" />
+
+<RatingBar
+  android:id                     ="@+id/ratingBar"
+  android:layout_alignParentRight="true"
+  android:layout_width           ="wrap_content"
+  android:layout_height          ="wrap_content"
+  style                          ="?android:attr/ratingBarStyleSmall"
+  android:numStars               ="5" />
+
+
+===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part4.html
+
+
+===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part5.html
+
+
+===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part6.html
+
+..
+
+public event EventHandler<int> ItemClick;
+
+..
+
+void OnItemClick(int position)
+{
+  // TODO: raise ItemClick event
+}
+
+
+===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part7.html
+
+..
+
+<android.support.v7.widget.CardView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginTop  ="8dp"
+  android:layout_marginLeft ="8dp"
+  android:layout_marginRight="8dp">
+
+
+===> code listed in: ./and205-navigation-patterns/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./and205-navigation-patterns/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./and205-navigation-patterns/Lab Materials/parts/part3.html
+
+
+===> code listed in: ./and230-googlemaps/Lab Materials/parts/part1.html
+
+..
+keytool
+..
+
+keytool -list -v -keystore [STORE FILENAME] -storepass [STORE PASSWORD] -keypass [KEY PASSWORD]
+
+..
+
+keytool -list -v -keystore ~/.local/share/Xamarin/Mono\ for\ Android/debug.keystore -storepass android -keypass android
+
+..
+
+Keystore type: JKS
+Keystore provider: SUN
+
+Your keystore contains 1 entry
+
+Alias name: androiddebugkey
+Creation date: Nov 21, 2013
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=Android Debug, O=Android, C=US
+Issuer: CN=Android Debug, O=Android, C=US
+Serial number: 528e619d
+Valid from: Thu Nov 21 13:40:13 CST 2013 until: Tue Feb 17 13:40:13 CST 2043
+Certificate fingerprints:
+   MD5:  33:37:EB:AB:58:21:2F:0C:84:89:2B:E0:8E:51:D3:95
+   SHA1: 2F:5B:C7:6D:F6:8E:87:69:1A:62:44:14:59:4B:9F:4F:3B:EE:35:E9
+   Signature algorithm name: SHA1withRSA
+   Version: 3
+
+
+===> code listed in: ./and230-googlemaps/Lab Materials/parts/part2.html
+
+..
+
+using Android.App;
+
+#if RELEASE
+[assembly: MetaDataAttribute("com.google.android.geo.API_KEY", Value="release_key_goes_here")]
+#else
+[assembly: MetaDataAttribute("com.google.android.geo.API_KEY", Value="debug_key_goes_here")]
+#endif
+
+..
+
+<Project DefaultTargets="Build" ToolsVersion="4.0" ...>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+     ...
+    <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
+  </PropertyGroup>
+  ...
+
+
+===> code listed in: ./and230-googlemaps/Lab Materials/parts/part3.html
+
+
+===> code listed in: ./and230-googlemaps/Lab Materials/parts/part4.html
+
+..
+marker.Flat = !marker.Flat;
+..
+
+static readonly LatLng Location_Xamarin = new LatLng(37.80, -122.40);
+static readonly LatLng Location_NewYork = new LatLng(40.77, -73.98);
+static readonly LatLng Location_Chicago = new LatLng(41.88, -87.63);
+static readonly LatLng Location_Dallas = new LatLng(32.90, -97.03);
+
+
+===> code listed in: ./and230-googlemaps/Lab Materials/parts/part5.html
+
+
+===> code listed in: ./and240-touch-in-android/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./and240-touch-in-android/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./and240-touch-in-android/Lab Materials/parts/part3.html
+
+
+===> code listed in: ./and450-binding/Lab Materials/parts/part1.html
+
+..
+
+package com.xamarin;
+
+public class Pi
+{
+  public static double calculate(int iterations)
+  {
+    double quarterPi = 0;
+
+    for (int i = 0; i < iterations; i++)
+    {
+      double term = 1.0 / (2 * i + 1);
+
+      int sign = i % 2 == 0 ? 1 : -1;
+
+      quarterPi += sign * term;
+    }
+
+    return quarterPi * 4;
+  }
+}
+
+===> code listed in: ./and450-binding/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./and450-binding/Lab Materials/parts/part3.html
+
+
+===> code listed in: ./csc350-async/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./csc350-async/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./customizing-maps-ios231/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./customizing-maps-ios231/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./customizing-maps-ios231/Lab Materials/parts/part3.html
+
+
+===> code listed in: ./customizing-maps-ios231/Lab Materials/parts/part4.html
+
+
+===> code listed in: ./customizing-maps-ios231/Lab Materials/parts/part5.html
+
+
+===> code listed in: ./customizing-table-views-ios115/Labs/parts/part1.html
+
+..
+
+public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
+{
+   var cell = tableView.DequeueReusableCell (CELL_ID);
+
+   if (cell == null)
+   {
+      cell = new UITableViewCell (UITableViewCellStyle.Subtitle, CELL_ID);
+   }
+
+   var weather = data [indexPath.Row];
+
+   cell.TextLabel.Text = weather.City;
+   cell.DetailTextLabel.Text = weather.ToString ();
+
+   return cell;
+}
+
+..
+
+public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
+{
+   ...
+   cell.ImageView.Image = UIImage.FromBundle(weather.CurrentConditions.ToString() + ".png");
+
+   return cell;
+}
+
+..
+
+public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
+{
+   var cell = tableView.DequeueReusableCell (CELL_ID);
+
+   if (cell == null)
+   {
+      cell = new UITableViewCell (UITableViewCellStyle.Subtitle, CELL_ID);
+
+      cell.TextLabel.TextColor = UIColor.FromRGB (59, 102, 136);
+      cell.TextLabel.Font = UIFont.SystemFontOfSize (20, UIFontWeight.Bold);
+
+      cell.DetailTextLabel.TextColor = UIColor.FromRGB (0, 142, 255);
+      cell.DetailTextLabel.Font = UIFont.ItalicSystemFontOfSize (12);
+   }
+   ...
+   return cell;
+}
+
+
+===> code listed in: ./customizing-table-views-ios115/Labs/parts/part2.html
+
+..
+
+using System;
+using UIKit;
+using CoreGraphics;
+
+namespace WeatherApp
+{
+   public class WeatherCell : UITableViewCell
+   {
+      public WeatherCell (IntPtr ptr) : base (ptr)
+      {
+
+      }
+   }
+}
+            
+..
+
+UILabel lblCity, lblHigh, lblLow;
+UIImageView imgWeather;
+
+public WeatherCell (IntPtr ptr) : base (ptr)
+{
+   var cellFont = UIFont.SystemFontOfSize(14);
+   var cellTextColor1 = UIColor.FromRGB (59, 102, 136);
+   var cellTextColor2 = UIColor.FromRGB (119, 180, 229);
+
+   imgWeather = new UIImageView ();
+   lblCity = new UILabel () { Font = cellFont, TextColor = cellTextColor1 };
+   lblHigh = new UILabel () { Font = cellFont, TextColor = cellTextColor2, TextAlignment = UITextAlignment.Right };
+   lblLow = new UILabel () { Font = cellFont, TextColor = cellTextColor1, TextAlignment = UITextAlignment.Right };
+
+   ContentView.Add (imgWeather);
+   ContentView.Add (lblCity);
+   ContentView.Add (lblHigh);
+   ContentView.Add (lblLow);
+}
+            
+..
+
+public override void LayoutSubviews ()
+{
+   base.LayoutSubviews ();
+
+   var width = ContentView.Frame.Width;
+
+   imgWeather.Frame = new CGRect (0, 0, 30, 30);
+   imgWeather.Center = ContentView.Center;
+
+   lblCity.Frame = new CGRect (20, 7, 100, 30);
+   lblLow.Frame = new CGRect (width - 50, 7, 30, 30);
+   lblHigh.Frame = new CGRect (lblLow.Frame.Left - 30, 7, 30, 30);
+}
+            
+..
+
+public void UpdateData (Weather weather)
+{
+   imgWeather.Image = UIImage.FromBundle(weather.CurrentConditions.ToString() + ".png");
+
+   lblCity.Text = weather.City;
+   lblHigh.Text = String.Format ("{0}", weather.High);
+   lblLow.Text = String.Format ("{0}", weather.Low);
+}
+            
+..
+
+partial class WeatherTVC : UITableViewController
+{
+   public WeatherTVC (IntPtr handle) : base (handle)
+   {
+      data = WeatherFactory.GetWeatherData ();
+
+      TableView.RegisterClassForCellReuse(typeof(WeatherCell), CELL_ID);
+   }
+   ...
+}
+                    
+..
+
+public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
+{
+   var cell = (WeatherCell)tableView.DequeueReusableCell (CELL_ID);
+
+   cell.UpdateData (data [indexPath.Row]);
+
+   return cell;
+}
+            
+
+===> code listed in: ./customizing-table-views-ios115/Labs/parts/part3.html
+
+..
+
+public void UpdateData (Weather weather)
+{
+   TextCity.Text = weather.City;
+   TextTempHi.Text = weather.High.ToString ();
+   TextTempLow.Text = weather.Low.ToString ();
+   ImageWeather.Image = UIImage.FromBundle (weather.CurrentConditions.ToString () + ".png");
+}
+              
+..
+
+public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
+{
+   var cell = (WeatherTableCell)tableView.DequeueReusableCell ("cell_id");
+
+   cell.UpdateData(data[indexPath.Row]);
+
+   return cell;
+}
+                  
+
+===> code listed in: ./customizing-table-views-ios115/Labs/parts/part4.html
+
+
+===> code listed in: ./customizing-table-views-ios115/Labs/parts/part5.html
+
+..
+
+public class WeatherTVC : UITableViewController
+{
+   IGrouping<char, Weather>[] grouping; // sub-group of speakers in each index
+   //List<Weather> data;
+
+   public WeatherTVC (IntPtr handle) : base (handle)
+   {
+      var data = WeatherFactory.GetWeatherData();
+
+      grouping = (from w in data
+         orderby w.City[0] ascending
+         group w by w.City[0] into g
+         select g).ToArray ();
+   }
+   ...
+        
+..
+
+public override nint RowsInSection (UITableView tableview, nint section)
+{
+  return grouping[section].Count();
+}
+          
+..
+
+public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
+{
+   var cell = (WeatherTableCell)tableView.DequeueReusableCell ("cell_id");
+   var weather = grouping [indexPath.Section].ElementAt(indexPath.Row);
+
+   cell.UpdateData(weather);
+   return cell;
+}
+          
+..
+
+public override nint NumberOfSections (UITableView tableView)
+{
+   return grouping.Length;
+}
+          
+..
+
+public override string TitleForHeader (UITableView tableView, nint section)
+{
+   return grouping [section].Key.ToString();
+}
+            
+..
+
+public override string TitleForFooter (UITableView tableView, nint section)
+{
+   return "Number of Cities: " + grouping [section].Count ().ToString ();
+}
+            
+..
+
+public class WeatherTVC : UITableViewController
+{
+   ...
+   IGrouping<char, Weather>[] grouping; // sub-group of speakers in each index
+   string[] indices; // array to show in index
+
+   public WeatherTVC (List <Weather> data)
+   {
+     ...
+
+      indices = (from s in data
+         orderby s.City ascending
+         group s by s.City [0] into g
+         select g.Key.ToString ()).ToArray ();
+   }
+   ...
+}
+        
+..
+
+public override string[] SectionIndexTitles (UITableView tableView)
+{
+   return indices;
+}
+          
+
+===> code listed in: ./ent172-using-xam-auth/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./ent172-using-xam-auth/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./ent172-using-xam-auth/Lab Materials/parts/part3.html
+
+
+===> code listed in: ./ent172-using-xam-auth/Lab Materials/parts/part4.html
+
+
+===> code listed in: ./ios101-intro-to-ios/Lab Materials/parts/homework.html
+
+..
+
+UISegmentedControl tipAmount = ...;
+tipAmount.InsertSegment("10%", 0, false);
+tipAmount.InsertSegment("15%", 1, false);
+
+
+===> code listed in: ./ios101-intro-to-ios/Lab Materials/parts/part1.html
+
+..
+⌘+B
+..
+
+public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
+{
+    ...
+    // Code to start the Xamarin Test Cloud Agent
+    #if ENABLE_TEST_CLOUD
+    Xamarin.Calabash.Start();
+    #endif
+    
+    ...
+    return true;
+}
+
+..
+CTRL+SHIFT+B
+
+===> code listed in: ./ios101-intro-to-ios/Lab Materials/parts/part2.html
+
+..
+⌘+B
+..
+CTRL+SHIFT+B
+
+===> code listed in: ./ios101-intro-to-ios/Lab Materials/parts/part3.html
+
+..
+
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+
+    this.View.BackgroundColor = UIColor.Yellow;
+}
+
+
+===> code listed in: ./ios101-intro-to-ios/Lab Materials/parts/part4.html
+
+
+===> code listed in: ./ios102-designer/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./ios102-designer/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./ios102-designer/Lab Materials/parts/part3.html
+
+
+===> code listed in: ./ios102-designer/Lab Materials/parts/part4.html
+
+
+===> code listed in: ./ios102-designer/Lab Materials/parts/part5.html
+
+
+===> code listed in: ./ios110-tables-views-in-ios/Lab Materials/parts/part1.html
+
+..
+
+    var view = new UIView(...) {
+         new UIButton(...),
+         new UILabel(...),
+         ...
+    };
+
+..
+
+// This assumes your TableView is in a field named "tableView"
+tableView.TranslatesAutoresizingMaskIntoConstraints = false;
+this.View.AddConstraint(NSLayoutConstraint.Create(tableView, NSLayoutAttribute.Top,
+    NSLayoutRelation.Equal, this.View, NSLayoutAttribute.TopMargin, 1, 0));
+this.View.AddConstraint(NSLayoutConstraint.Create(tableView, NSLayoutAttribute.Left,
+    NSLayoutRelation.Equal, this.View, NSLayoutAttribute.Left, 1, 0));
+this.View.AddConstraint(NSLayoutConstraint.Create(tableView, NSLayoutAttribute.Width,
+    NSLayoutRelation.Equal, this.View, NSLayoutAttribute.Width, 1, 0));
+this.View.AddConstraint(NSLayoutConstraint.Create(tableView, NSLayoutAttribute.Height,
+    NSLayoutRelation.Equal, this.View, NSLayoutAttribute.Height, 1, 0));
+
+
+===> code listed in: ./ios110-tables-views-in-ios/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./ios110-tables-views-in-ios/Lab Materials/parts/part3.html
+
+..
+
+tableView.ContentInset = new UIEdgeInsets(20, 0, 0, 0);
+
+..
+
+cell.TextLabel.Text = item.Subject.Substring(0,20) + "...";
+
+
+===> code listed in: ./ios110-tables-views-in-ios/Lab Materials/parts/part4.html
+
+..
+
+partial class DetailsViewController : UIViewController
+{
+    public DetailsViewController (IntPtr handle) : base (handle)
+    {
+    }
+
+    EmailItem item;
+    public EmailItem Item {
+        get {
+            return item;
+        }
+        set {
+            item = value;
+            UpdateItem();
+        }
+    }
+
+    public override void ViewWillAppear(bool animated)
+    {
+        base.ViewWillAppear(animated);
+        UpdateItem();
+    }
+
+    public void UpdateItem()
+    {
+        if (EmailText != null) {
+            EmailText.Text = (Item != null) ? Item.ToString() : "";
+        }
+    }
+
+    partial void OnDismiss(UIButton sender)
+    {
+        DismissViewController(true, null);
+    }  
+
+}
+
+..
+
+// Create the View Controller in the Main storyboard.
+var storyboard = UIStoryboard.FromName("Main", null);
+var detailViewController = 
+     (DetailsViewController) storyboard.InstantiateViewController(
+         "DetailsViewController");
+
+..
+
+var controller = UIAlertController.Create("Email Details", 
+         emailItem.ToString(), UIAlertControllerStyle.Alert);
+controller.AddAction(UIAlertAction.Create("OK", 
+        UIAlertActionStyle.Default, null));
+
+
+===> code listed in: ./ios110-tables-views-in-ios/Lab Materials/parts/part5.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/Part 01 Resources/Completed/Clock/bin/iPhoneSimulator/Debug/Clock.app/About.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/Part 01 Resources/Completed/Clock/Resources/About.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/Part 01 Resources/Start/Clock/Resources/About.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/Part 02 Resources/Completed/Clock/bin/iPhoneSimulator/Debug/Clock.app/About.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/Part 02 Resources/Completed/Clock/Resources/About.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/Part 02 Resources/Start/Clock/Resources/About.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/Part 03 Resources/Completed/Clock/bin/iPhoneSimulator/Debug/Clock.app/About.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/Part 03 Resources/Completed/Clock/bin/iPhoneSimulator/Release/Clock.app/About.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/Part 03 Resources/Completed/Clock/Resources/About.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/Part 03 Resources/Start/Clock/Resources/About.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./ios205-navigation/Lab Materials/parts/part3.html
+
+
+===> code listed in: ./ios210-backgrounding/Lab Resources/parts/part1.html
+
+
+===> code listed in: ./ios210-backgrounding/Lab Resources/parts/part2.html
+
+
+===> code listed in: ./ios211-background-modes-and-file-transfers/Lab Resources/parts/part1.html
+
+..
+//TODO
+
+===> code listed in: ./ios211-background-modes-and-file-transfers/Lab Resources/parts/part2.html
+
+
+===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part2.html
+
+..
+
+await new DataStore().Delete(expense);
+
+
+===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part3.html
+
+..
+
+await new DataStore().Update(expense);
+
+
+===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part4.html
+
+..
+
+expenses = (await new DataStore().Reset()).ToList();
+
+
+===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part5.html
+
+..
+
+void FilterContentForSearchText(string text)
+{
+    // Make sure to add using statement for System.Linq if needed.
+    if (filteredExpenses != null) {
+        filteredExpenses.Clear();
+        filteredExpenses.AddRange(
+            expenses.Where(e => 
+                string.IsNullOrWhiteSpace(text) 
+                || e.Title.ToUpper().Contains(text.ToUpper())));
+    }
+
+    TableView.ReloadData();
+}
+
+
+===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part6.html
+
+..
+
+new[] { "All", "Lodging", "Meal", "Transportation", "Other" });
+
+..
+
+- (void)searchBar:(UISearchBar *)searchBar
+selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
+
+..
+
+[Export ("searchBar:selectedScopeButtonIndexDidChange:")]
+
+
+===> code listed in: ./ios230-maps-and-location-in-ios/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./ios230-maps-and-location-in-ios/Lab Materials/parts/part2.html
+
+..
+
+var alertController = UIAlertController.Create(
+          "Title Goes Here", 
+          "Message Goes Here", 
+          UIAlertControllerStyle.Alert);
+
+// Add YES and NO buttons
+alertController.AddAction(UIAlertAction.Create(
+    "Yes", UIAlertActionStyle.Default,
+    alert => {
+       /* Code to execute when YES is clicked */
+    }));
+
+alertController.AddAction(UIAlertAction.Create(
+    "No", UIAlertActionStyle.Cancel, null));
+
+// Show the alert    
+this.PresentViewController(alertController, true, null);
+
+..
+
+var alert = new UIAlertView ("Unabled to determine location",
+    "This application works best when it can determine your current position.  " +
+    "Please open the Settings and enable Location Services for this app.", 
+    null,"OK");
+alert.Show ();
+
+
+===> code listed in: ./ios230-maps-and-location-in-ios/Lab Materials/parts/part3.html
+
+..
+
+CLLocationCoordinate2D locSanFran = new CLLocationCoordinate2D(37.7833, -122.4167);
+CLLocationCoordinate2D locBoston = new CLLocationCoordinate2D(42.3601, -71.0589);
+CLLocationCoordinate2D locLondon = new CLLocationCoordinate2D(51.5072, -0.1275);
+CLLocationCoordinate2D locSingapore = new CLLocationCoordinate2D(1.3, 103.8);
+
+
+===> code listed in: ./ios230-maps-and-location-in-ios/Lab Materials/parts/part4.html
+
+
+===> code listed in: ./ios240-touch-in-ios/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./ios240-touch-in-ios/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./ios240-touch-in-ios/Lab Materials/parts/part3.html
+
+
+===> code listed in: ./ios240-touch-in-ios/Lab Materials/parts/part4.html
+
+
+===> code listed in: ./IOS300-advanced-ios-ui/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./IOS300-advanced-ios-ui/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./IOS300-advanced-ios-ui/Lab Materials/parts/part3.html
+
+..
+
+//helper method to create constraints based on existing constraints
+NSLayoutConstraint GetConstraint (
+   NSLayoutConstraint constraint,
+   NSObject object1 = null,
+   NSLayoutAttribute? attribute1 = null,
+   NSLayoutRelation? relation = null,
+   NSObject object2 = null,
+   NSLayoutAttribute? attribute2 = null,
+   nfloat? multiplier = null,
+   nfloat? constant = null)
+{
+   if (constraint == null)
+            return null;
+   return NSLayoutConstraint.Create(
+            object1 ?? constraint.FirstItem,
+            (attribute1 == null) ? constraint.FirstAttribute : attribute1.Value,
+            (relation == null) ? constraint.Relation : relation.Value,
+            object2 ?? constraint.SecondItem, 
+            (attribute2 == null) ? constraint.SecondAttribute : attribute2.Value,
+            (multiplier == null) ? constraint.Multiplier : multiplier.Value,
+            (constant == null) ? constraint.Constant : constant.Value);
+}
+
+
+===> code listed in: ./IOS300-advanced-ios-ui/Lab Materials/parts/part4.html
+
+..
+
+UIView.Animate (2.0, () => {
+    this.View.AddConstraint (constMonkeyEdge);
+    this.View.LayoutIfNeeded();
+});
+
+
+===> code listed in: ./ios350-whats-new-in-ios8/Lab Materials/parts/part1.html
+
+..
+
+public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+{
+   var check = Checks[indexPath.Row];
+// UITableViewCell cell = tableView.DequeueReusableCell("BasicCheckCell");
+// if (cell == null) {
+//    cell = new UITableViewCell(UITableViewCellStyle.Subtitle, "BasicCheckCell");
+//    cell.DetailTextLabel.TextColor = UIColor.LightGray;
+// }
+//
+// cell.TextLabel.Text = check.Payee;
+// cell.DetailTextLabel.Text = check.Amount.ToString("C");
+
+   // TODO: Step 1: use a custom cell.
+   CheckViewCell cell = (CheckViewCell) tableView.DequeueReusableCell(
+      new NSString("CheckCell"), indexPath);
+   cell.DateLabel.Text = check.Date.ToString("D");
+   cell.PayeeText.Text = check.Payee;
+   cell.Amount.Text = check.Amount.ToString("C");
+   cell.Amount.TextColor = check.Amount > 0 ? UIColor.Green : UIColor.Red;
+   cell.BackgroundColor = check.Cleared ? UIColor.FromRGB(0xf0, 0xf0, 0xf0) 
+                                        : UIColor.White;
+
+   return cell;
+}
+
+..
+
+cell.DateLabel.Font = UIFont.PreferredSubheadline;
+cell.PayeeText.Font = cell.Amount.Font = UIFont.PreferredHeadline;
+
+..
+
+NSNotificationCenter.DefaultCenter.AddObserver(
+   UIApplication.ContentSizeCategoryChangedNotification,
+   n => TableView.ReloadData());
+
+..
+
+var searchResultsController = new SearchResultsViewController(this, Checks);
+
+..
+
+SearchController.SearchBar.Frame = new CGRect(SearchController.SearchBar.Frame.X, SearchController.SearchBar.Frame.Y, SearchController.SearchBar.Frame.Width, 44f);
+TableView.TableHeaderView = SearchController.SearchBar;
+DefinesPresentationContext = true;
+
+..
+
+public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
+{
+   var check = visibleChecks[indexPath.Row];
+   parentViewController.ShowDetailViewController(
+      new CheckDetailsViewController() { Check = check }, 
+      parentViewController);
+}
+
+
+===> code listed in: ./location-services-and231/Lab Materials/parts/part1.html
+
+..
+keytool
+..
+
+keytool -list -v -keystore [STORE FILENAME] -storepass [STORE PASSWORD] 
+        -keypass [KEY PASSWORD]
+
+..
+
+keytool -list -v -keystore ~/.local/share/Xamarin/Mono\ for\ Android/debug.keystore 
+        -storepass android -keypass android
+
+..
+
+Keystore type: JKS
+Keystore provider: SUN
+
+Your keystore contains 1 entry
+
+Alias name: androiddebugkey
+Creation date: Nov 21, 2013
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=Android Debug, O=Android, C=US
+Issuer: CN=Android Debug, O=Android, C=US
+Serial number: 528e619d
+Valid from: Thu Nov 21 13:40:13 CST 2013 until: Tue Feb 17 13:40:13 CST 2043
+Certificate fingerprints:
+   MD5:  33:37:EB:AB:58:21:2F:0C:84:89:2B:E0:8E:51:D3:95
+   SHA1: 2F:5B:C7:6D:F6:8E:87:69:1A:62:44:14:59:4B:9F:4F:3B:EE:35:E9
+   Signature algorithm name: SHA1withRSA
+   Version: 3
+
+..
+
+using Android.App;
+
+#if RELEASE
+[assembly: MetaDataAttribute("com.google.android.maps.v2.API_KEY", Value="release_key_goes_here")]
+#else
+[assembly: MetaDataAttribute("com.google.android.maps.v2.API_KEY", Value="debug_key_goes_here")]
+#endif
+
+
+===> code listed in: ./location-services-and231/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./location-services-and231/Lab Materials/parts/part3.html
+
+
+===> code listed in: ./location-services-and231/Lab Materials/parts/part4.html
+
+..
+
+using Android.Gms.Plus;
+...
+apiClient = new GoogleApiClient.Builder(this)
+      .AddConnectionCallbacks(this)
+      .AddOnConnectionFailedListener(this)
+      .AddApi(LocationServices.API)
+      .AddApi(PlusClass.API)
+      .AddScope(PlusClass.ScopePlusLogin)
+      .Build();
+
+
+===> code listed in: ./location-services-and231/Lab Materials/parts/part5.html
+
+..
+
+string GetAddress(Address result)
+{
+    var sb = new System.Text.StringBuilder();
+    for (int index = 0; index < result.MaxAddressLineIndex; index++) {
+        if (sb.Length > 0)
+            sb.Append(", ");
+        sb.Append(result.GetAddressLine(index));
+    }
+    return sb.ToString();
+}
+
+
+===> code listed in: ./location-services-and231/Lab Materials/parts/part6.html
+
+..
+
+LatLngBounds bounds = e.Point.GetBoundingBox(8000); // ~5mi
+
+
+===> code listed in: ./touch-gestures-and241/Lab Materials/parts/part1.html
+
+
+===> code listed in: ./touch-gestures-and241/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./touch-gestures-and241/Lab Materials/parts/part3.html
+
+..
+
+float GetAngle (MotionEvent e, int pointerId1, int pointerId2)
+{
+   var x1 = e.GetX (pointerId1);
+   var y1 = e.GetY (pointerId1);
+   var x2 = e.GetX (pointerId2);
+   var y2 = e.GetY (pointerId2);
+
+   return GetAngle (x1, y1, x2, y2);
+}
+
+float GetAngle (float x1, float y1, float x2, float y2)
+{
+   double angle = Math.Atan2((y1 - y2), (x1 - x2));
+   return (float)(angle * 180 / Math.PI);
+}
+
+
+===> code listed in: ./xam160-data-in-mobile/Lab Materials/parts/part1.html
+
+..
+
+string path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+
+..
+
+string docFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+string libFolder = System.IO.Path.Combine(docFolder, "..", "Library", "Databases");
+
+..
+
+// Might need to escape the namespace with "global::" if "Windows" is in the app namespace.
+string path = global::Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+
+..
+
+public static string GetLocalFilePath(string filename)
+{
+   ...
+}
+
+
+===> code listed in: ./xam160-data-in-mobile/Lab Materials/parts/part2.html
+
+
+===> code listed in: ./xam160-data-in-mobile/Lab Materials/parts/part3.html
+
+..
+
+namespace People.Models
+{    
+    public class Person
+    {        
+    }
+}
+
+..
+
+public int Id { get; set; }
+public string Name { get; set; }
+
+
+===> code listed in: ./xam160-data-in-mobile/Lab Materials/parts/part4.html
+
+..
+
+public async Task<List<Person>> GetAllPeopleAsync()
+{
+    List<Person> people = await conn.Table<Person>().ToListAsync();
+    // This line is executed once the awaited call completes execution
+    return people;
+}
+
+..
+
+var result = await conn.InsertAsync(new Person { Name = name }).ConfigureAwait(continueOnCapturedContext: false);
+
+
+===> code listed in: ./xam300-advanced-cross-platform-development/Lab Materials/parts/part1.html
+
+..
+
+namespace System.Runtime.CompilerServices
+{
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+    public class CallerMemberNameAttribute : Attribute
+    {
+    }
+ 
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+    public class CallerFilePathAttribute : Attribute
+    {
+    }
+ 
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+    public class CallerLineNumberAttribute : Attribute
+    {
+    }
+}
+
+..
+
+public static class QuoteLoaderFactory
+{
+   // This must be assigned to a method which creates a new quote loader.
+   public static Func<IQuoteLoader> Create { get; set; }
+}
+
+..
+
+public class QuoteManager
+{
+   private static readonly QuoteManager instance = new QuoteManager();
+
+   public static QuoteManager Instance { get { return instance; } }
+
+   private QuoteManager() 
+   {
+      ...
+   }
+}
+
+..
+
+IQuoteLoader loader;
+...
+private QuoteManager()
+{
+   ...
+   loader = QuoteLoaderFactory.Create();
+}
+
+..
+
+public static List<GreatQuote> Quotes { get; private set; }
+
+
+===> code listed in: ./xam300-advanced-cross-platform-development/Lab Materials/parts/part2.html
+
+..
+
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+    ...
+    NavigationItem.RightBarButtonItem = editButton;
+    Quote.AddGestureRecognizer(new UITapGestureRecognizer(() => QuoteManager.Instance.SayQuote(quote)));
+}
+
+..
+
+protected override void OnCreate(Bundle bundle)
+{
+    base.OnCreate(bundle);
+    ...
+    quoteText.Touch += (sender, e) => {
+        var qm = QuoteManager.Instance;
+        qm.SayQuote(qm.Quotes[quoteIndex]);
+    };
+}
+
+..
+
+private void OnSayQuote(object sender, PointerRoutedEventArgs e)
+{
+    QuoteManager.Instance.SayQuote((GreatQuote)DataContext);
+}
+
+
+===> code listed in: ./xam300-advanced-cross-platform-development/Lab Materials/parts/part3.html
+
