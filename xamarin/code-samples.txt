@@ -1375,6 +1375,89 @@ LatLngBounds bounds = e.Point.GetBoundingBox(8000); // ~5mi
 
 ===> code listed in: ./touch-gestures-and241/Lab Materials/parts/part1.html
 
+..
+
+[Activity (Label = "Gestures", MainLauncher = true, Icon = "@drawable/icon")]
+public class MainActivity : Activity, GestureDetector.IOnGestureListener
+{
+protected override void OnCreate (Bundle bundle)
+{
+   base.OnCreate (bundle);
+
+   SetContentView (Resource.Layout.Main);
+}
+..
+
+public class MainActivity : Activity, GestureDetector.IOnGestureListener
+{
+   private GestureDetector gestureDetector;
+   private ImageView xamLogo;
+   private float deltaX, deltaY;
+   ...
+}
+..
+
+protected override void OnCreate (Bundle bundle)
+{
+   base.OnCreate (bundle);
+
+   SetContentView (Resource.Layout.Main);
+
+   xamLogo = FindViewById<ImageView> (Resource.Id.xamLogo);
+
+   gestureDetector = new GestureDetector (context: this, listener: this);
+}
+..
+
+public class MainActivity : Activity, GestureDetector.IOnGestureListener
+{
+   ...
+   public bool OnDown (MotionEvent e)
+   {
+      return false;
+   }
+
+   public bool OnFling (MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+   {
+      return false;
+   }
+
+   public void OnLongPress (MotionEvent e)
+   {
+   }
+
+   public bool OnScroll (MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
+   {
+      return true;
+   }
+
+   public void OnShowPress (MotionEvent e)
+   {
+   }
+
+   public bool OnSingleTapUp (MotionEvent e)
+   {
+      return false;
+   }
+}
+..
+
+public bool OnScroll (MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
+{
+   deltaX -= distanceX;
+   deltaY -= distanceY;
+
+   xamLogo.TranslationX = deltaX;
+   xamLogo.TranslationY = deltaY;
+
+   return true;
+}
+..
+
+public override bool OnTouchEvent (MotionEvent e)
+{
+   return gestureDetector.OnTouchEvent (e);
+}
 
 ===> code listed in: ./touch-gestures-and241/Lab Materials/parts/part2.html
 
