@@ -317,6 +317,15 @@ public abstract class BaseAdapter<T> : BaseAdapter
 
 ..
 
+List<Instructor> instructors;
+
+public InstructorAdapter(List<Instructor> instructors)
+{
+  this.instructors = instructors;
+}
+
+..
+
 public abstract T this[int position] { get; }
 
 ..
@@ -336,8 +345,75 @@ public abstract View GetView(int position, View convertView, ViewGroup parent);
 string url = "images/myPhoto.jpg"; // path is relative to the project's Assets folder
 var drawable = Drawable.CreateFromStream(parent.Context.Assets.Open(url), null);
 
+..
+
+public override View GetView(int position, View convertView, ViewGroup parent)
+{
+  var inflater = LayoutInflater.From(parent.Context);
+  var view = inflater.Inflate(Resource.Layout.InstructorRow, parent, false);
+
+  var photo     = view.FindViewById<ImageView>(Resource.Id.photoImageView);
+  var name      = view.FindViewById<TextView> (Resource.Id.nameTextView);
+  var specialty = view.FindViewById<TextView> (Resource.Id.specialtyTextView);
+
+  Stream   stream   = parent.Context.Assets.Open(instructors[position].ImageUrl);
+  Drawable drawable = Drawable.CreateFromStream(stream, null);
+  photo.SetImageDrawable(drawable);
+
+  name     .Text = instructors[position].Name;
+  specialty.Text = instructors[position].Specialty;
+
+  return view;
+}
+
+..
+
+instructorList.Adapter = new InstructorAdapter(InstructorData.Instructors);
+
 
 ===> code listed in: ./and110-list-views-and-adapters-in-android/Lab Materials/parts/part4.html
+
+..
+
+photo.SetImageDrawable(ImageAssetManager.Get(parent.Context, instructors[position].ImageUrl));
+
+..
+
+public override View GetView(int position, View convertView, ViewGroup parent)
+{
+  var view = convertView;
+  if (view == null)
+  {
+    view = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.InstructorRow, parent, false);
+  }
+...
+}
+
+..
+
+public override View GetView(int position, View convertView, ViewGroup parent)
+{
+  var view = convertView;
+
+  if (view == null)
+  {
+    view = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.InstructorRow, parent, false);
+
+    var p = view.FindViewById<ImageView>(Resource.Id.photoImageView);
+    var n = view.FindViewById<TextView>(Resource.Id.nameTextView);
+    var s = view.FindViewById<TextView>(Resource.Id.specialtyTextView);
+
+    view.Tag = new ViewHolder() { Photo = p, Name = n, Specialty = s };
+  }
+
+  var holder = (ViewHolder)view.Tag;
+
+  holder.Photo.SetImageDrawable(ImageAssetManager.Get(parent.Context, instructors[position].ImageUrl));
+  holder.Name     .Text = instructors[position].Name;
+  holder.Specialty.Text = instructors[position].Specialty;
+
+  return view;
+}
 
 
 ===> code listed in: ./and110-list-views-and-adapters-in-android/Lab Materials/parts/part5.html
@@ -362,11 +438,53 @@ public static class SectionIndexerBuilder
      List<Instructor> instructors) ...
 }
 
+..
+
+Java.Lang.Object[]   sectionHeaders;
+Dictionary<int, int> positionForSectionMap;
+Dictionary<int, int> sectionForPositionMap;
+
+public InstructorAdapter(List instructors)
+{
+  this.instructors = instructors;
+
+  sectionHeaders        = SectionIndexerBuilder.BuildSectionHeaders       (instructors);
+  positionForSectionMap = SectionIndexerBuilder.BuildPositionForSectionMap(instructors);
+  sectionForPositionMap = SectionIndexerBuilder.BuildSectionForPositionMap(instructors);
+}
+..
+
+public Java.Lang.Object[] GetSections()
+{
+  return sectionHeaders;
+}
+
+public int GetPositionForSection(int section)
+{
+  return positionForSectionMap[section];
+}
+
+public int GetSectionForPosition(int position)
+{
+  return sectionForPositionMap[position];
+}
+
 
 ===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part1.html
 
+..
+
+<android.support.v7.widget.RecyclerView
+  android:id           ="@+id/recyclerView"
+  android:layout_width ="match_parent"
+  android:layout_height="wrap_content" />
+
 
 ===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part2.html
+
+..
+
+recyclerView.SetLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.Vertical, false));
 
 
 ===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part3.html
@@ -396,8 +514,44 @@ public static class SectionIndexerBuilder
 
 ===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part5.html
 
+..
+
+var layout = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.Restaurant, parent, false);
+return new RestaurantViewHolder(layout);
+
+..
+
+var vh = (RestaurantViewHolder)holder;
+vh.Name.Text     = restaurants[position].Name;
+vh.Rating.Rating = restaurants[position].Rating;
+
 
 ===> code listed in: ./and115-recyclerview 2/Lab Materials/parts/part6.html
+
+..
+
+Action<int> listener;
+
+public RestaurantViewHolder(View itemView, Action<int> listener)
+  : base(itemView)
+{
+  Name   = itemView.FindViewById<TextView >(Resource.Id.nameTextView);
+  Rating = itemView.FindViewById<RatingBar>(Resource.Id.ratingBar);
+
+  this.listener = listener;
+
+  itemView.Click += OnClick;
+}
+
+void OnClick(object sender, EventArgs e)
+{
+  int position = base.AdapterPosition;
+
+  if (position == RecyclerView.NoPosition)
+    return;
+
+  listener(position);
+}
 
 ..
 
@@ -426,46 +580,57 @@ void OnItemClick(int position)
 
 ===> code listed in: ./and205-navigation-patterns/Lab Materials/parts/part1.html
 
+..
+
+var intent = new Intent(this, typeof(TargetActivity));
+
 
 ===> code listed in: ./and205-navigation-patterns/Lab Materials/parts/part2.html
+
+..
+
+public ClockAdapter(Android.Support.V4.App.FragmentManager fm, Android.Support.V4.App.Fragment[] fragments, ICharSequence[] titles)
+{
+  // ...
+}
+
+..
+
+var adapter = new ClockAdapter(base.SupportFragmentManager, fragments, titles);
 
 
 ===> code listed in: ./and205-navigation-patterns/Lab Materials/parts/part3.html
 
+..
+
+drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, Resource.String.DrawerOpenDescription, Resource.String.DrawerCloseDescription);
+
+..
+
+ActionBar.SetDisplayHomeAsUpEnabled(true);
+
+..
+
+ActionBar.SetIcon(Android.Resource.Color.Transparent);
+
+..
+
+protected override void OnPostCreate(Bundle savedInstanceState)
+{
+  drawerToggle.SyncState();
+
+  base.OnPostCreate(savedInstanceState);
+}
+
+..
+
+if (drawerToggle.OnOptionsItemSelected(item))
+  return true;
+
+return base.OnOptionsItemSelected(item);
+
 
 ===> code listed in: ./and230-googlemaps/Lab Materials/parts/part1.html
-
-..
-keytool
-..
-
-keytool -list -v -keystore [STORE FILENAME] -storepass [STORE PASSWORD] -keypass [KEY PASSWORD]
-
-..
-
-keytool -list -v -keystore ~/.local/share/Xamarin/Mono\ for\ Android/debug.keystore -storepass android -keypass android
-
-..
-
-Keystore type: JKS
-Keystore provider: SUN
-
-Your keystore contains 1 entry
-
-Alias name: androiddebugkey
-Creation date: Nov 21, 2013
-Entry type: PrivateKeyEntry
-Certificate chain length: 1
-Certificate[1]:
-Owner: CN=Android Debug, O=Android, C=US
-Issuer: CN=Android Debug, O=Android, C=US
-Serial number: 528e619d
-Valid from: Thu Nov 21 13:40:13 CST 2013 until: Tue Feb 17 13:40:13 CST 2043
-Certificate fingerprints:
-   MD5:  33:37:EB:AB:58:21:2F:0C:84:89:2B:E0:8E:51:D3:95
-   SHA1: 2F:5B:C7:6D:F6:8E:87:69:1A:62:44:14:59:4B:9F:4F:3B:EE:35:E9
-   Signature algorithm name: SHA1withRSA
-   Version: 3
 
 
 ===> code listed in: ./and230-googlemaps/Lab Materials/parts/part2.html
@@ -493,6 +658,81 @@ using Android.App;
 
 ===> code listed in: ./and230-googlemaps/Lab Materials/parts/part3.html
 
+..
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        class="com.google.android.gms.maps.MapFragment" />
+</LinearLayout>
+..
+
+public class MainActivity : Activity
+{
+  MapFragment mapFragment;
+
+  protected override void OnCreate(Bundle bundle)
+  {
+      base.OnCreate(bundle);
+
+      // Set our view from the "main" layout resource
+      SetContentView(Resource.Layout.Main);
+
+      // Find the map fragment
+      mapFragment = FragmentManager.FindFragmentById(Resource.Id.map) as MapFragment;
+  }
+}
+
+..
+
+public class MainActivity : Activity, IOnMapReadyCallback
+{
+    GoogleMap map;
+    MapFragment mapFragment;
+
+    protected override void OnCreate(Bundle bundle)
+    {
+        base.OnCreate(bundle);
+
+        // Set our view from the "main" layout resource
+        SetContentView(Resource.Layout.Main);
+
+        // Find the map fragment
+        mapFragment = FragmentManager.FindFragmentById(Resource.Id.map) as MapFragment;
+
+        mapFragment.GetMapAsync(this);
+    }
+
+    public void OnMapReady(GoogleMap googleMap)
+    {
+        map = googleMap;
+    }
+
+}
+
+..
+
+public void OnMapReady(GoogleMap googleMap)
+{
+   map = googleMap;
+   map.MapType = GoogleMap.MapTypeSatellite;
+}
+
+..
+
+public void OnMapReady(GoogleMap googleMap)
+{
+   map = googleMap;
+   map.MapType = GoogleMap.MapTypeSatellite;
+
+   map.MyLocationEnabled = true;
+}
+
 
 ===> code listed in: ./and230-googlemaps/Lab Materials/parts/part4.html
 
@@ -505,17 +745,316 @@ static readonly LatLng Location_NewYork = new LatLng(40.77, -73.98);
 static readonly LatLng Location_Chicago = new LatLng(41.88, -87.63);
 static readonly LatLng Location_Dallas = new LatLng(32.90, -97.03);
 
+..
+
+static readonly LatLng Location_Xamarin = new LatLng(37.80, -122.40);
+static readonly LatLng Location_NewYork = new LatLng(40.77, -73.98);
+static readonly LatLng Location_Chicago = new LatLng(41.88, -87.63);
+static readonly LatLng Location_Dallas = new LatLng(32.90, -97.03);
+
+public void OnMapReady(GoogleMap googleMap)
+{
+    map = googleMap;
+    ...
+    map.AddMarker(new MarkerOptions().SetPosition(Location_NewYork));
+
+..
+
+map.AddMarker(new MarkerOptions()
+    .SetPosition(Location_Xamarin)
+    .SetTitle("Xamarin HQ")
+    .SetSnippet("Where the magic happens")
+    .SetIcon(BitmapDescriptorFactory
+        .FromResource(Resource.Drawable.Icon)));
+
+..
+
+Marker chicagoMarker = map.AddMarker(new MarkerOptions()
+      .SetPosition(Location_Chicago)
+      .SetTitle("Chicago")
+      .Draggable(true)
+      .SetIcon(BitmapDescriptorFactory
+         .DefaultMarker(BitmapDescriptorFactory.HueYellow)));
+
+..
+
+Marker dallasMarker = map.AddMarker(new MarkerOptions()
+      .SetPosition(Location_Dallas)
+      .SetTitle("Dallas")
+      .SetSnippet("Go Cowboys!")
+      .InfoWindowAnchor(1,0)
+      .SetIcon(BitmapDescriptorFactory
+        .DefaultMarker(BitmapDescriptorFactory.HueBlue)));
+
+..
+
+map.MarkerClick += delegate(object sender, GoogleMap.MarkerClickEventArgs e) {
+    if (e.Marker.Equals(dallasMarker)) {
+        dallasMarker.Flat = !dallasMarker.Flat;
+    }
+};
+
+..
+
+map.MarkerClick += delegate(object sender, GoogleMap.MarkerClickEventArgs e) {
+    if (e.Marker.Equals(dallasMarker)) {
+        dallasMarker.Flat = !dallasMarker.Flat;
+        dallasMarker.ShowInfoWindow();
+    } else {
+       // Execute default behavior for other markers.
+       // Could also just execute the following line for every
+       // marker..
+       e.Handled = false;
+   }
+};
+
+..
+
+map.InfoWindowClick += (sender, e) => 
+{
+    if (e.Marker.Id == chicagoMarker.Id) {
+        e.Marker.SetIcon(BitmapDescriptorFactory
+             .DefaultMarker(BitmapDescriptorFactory.HueRose));
+    }
+};
+
+..
+
+map.MapClick += (sender, e) => 
+{
+    if (!chicagoMarker.IsInfoWindowShown) {
+        chicagoMarker.SetIcon(BitmapDescriptorFactory
+            .DefaultMarker(BitmapDescriptorFactory.HueYellow));
+    }
+};
+
 
 ===> code listed in: ./and230-googlemaps/Lab Materials/parts/part5.html
+
+..
+
+CameraUpdate update = CameraUpdateFactory.NewLatLngZoom(Location_Xamarin, map.MaxZoomLevel);
+map.MoveCamera(update);
+
+..
+
+map.MapLongClick += (sender, e) => 
+        map.AnimateCamera(CameraUpdateFactory.ZoomOut(), 1000, null);
 
 
 ===> code listed in: ./and240-touch-in-android/Lab Materials/parts/part1.html
 
+..
+
+Path drawPath;
+Paint drawPaint;
+...
+void Init ()
+{
+   drawPath = new Path();
+   drawPaint = new Paint()
+   {
+      Color = Color.Aqua,
+      StrokeWidth = 5f,
+   };
+   drawPaint.SetStyle (Paint.Style.Stroke);
+}
+..
+
+public override bool OnTouchEvent (MotionEvent e)
+{
+   var x = e.GetX();
+   var y = e.GetY();
+}
+..
+
+public override bool OnTouchEvent (MotionEvent e)
+{
+   ...
+   switch (e.ActionMasked)
+   {
+   case MotionEventActions.Down:
+      break;
+   case MotionEventActions.Move:
+      break;
+   default:
+      return false;
+   }
+   return true;
+}
+..
+
+...
+case MotionEventActions.Down:
+   drawPath.MoveTo(x, y);
+   break;
+case MotionEventActions.Move:
+   drawPath.LineTo(x, y);
+   break;
+..
+
+protected override void OnDraw (Canvas canvas)
+{
+   canvas.DrawPath(drawPath, drawPaint);
+}
+
+public override bool OnTouchEvent (MotionEvent e)
+{
+   ...
+   switch (e.ActionMasked)
+   {
+   case MotionEventActions.Move:
+      drawPath.LineTo(x, y);
+      Invalidate();
+      break;
+   ...
+   }
+   return true;
+}
+
+..
+
+public void Clear ()
+{
+   drawPath.Reset();
+   Invalidate();
+}
 
 ===> code listed in: ./and240-touch-in-android/Lab Materials/parts/part2.html
 
 
 ===> code listed in: ./and240-touch-in-android/Lab Materials/parts/part3.html
+
+..
+
+public override bool OnTouchEvent(MotionEvent e)
+{
+  switch (e.ActionMasked)
+  {
+    case MotionEventActions.Down:
+    {
+      return true;
+    }
+    case MotionEventActions.PointerDown:
+    {
+      return true;
+    }
+    case MotionEventActions.Move:
+    {
+      return true;
+    }
+    case MotionEventActions.PointerUp:
+    {
+      return true;
+    }
+    case MotionEventActions.Up:
+    {
+      return true;
+    }
+    default:
+      return false;
+  }
+}
+..
+
+case MotionEventActions.Down:
+{
+  float x  = e.GetX(0);
+  float y  = e.GetY(0);
+  int   id = e.GetPointerId(0);
+  var path = new Path();
+  path.MoveTo(x, y);
+  currentLines.Add(id, path);
+  allLines    .Add(path);
+  allPaints   .Add(GenerateRandomColorPaint());
+  return true;
+}
+case MotionEventActions.PointerDown:
+{
+  float x  = e.GetX(e.ActionIndex);
+  float y  = e.GetY(e.ActionIndex);
+  int   id = e.GetPointerId(e.ActionIndex);
+  var path = new Path();
+  path.MoveTo(x, y);
+  currentLines.Add(id, path);
+  allLines    .Add(path);
+  allPaints   .Add(GenerateRandomColorPaint());
+  return true;
+}
+..
+
+case MotionEventActions.Move:
+{
+  for (int i = 0; i < e.PointerCount; i++)
+  {
+    float x  = e.GetX(i);
+    float y  = e.GetY(i);
+    int   id = e.GetPointerId(i);
+    currentLines[id].LineTo(x, y);
+  }
+  base.Invalidate();
+  return true;
+}
+
+..
+
+case MotionEventActions.PointerUp:
+{
+  currentLines.Remove(e.GetPointerId(e.ActionIndex));
+  return true;
+}
+case MotionEventActions.Up:
+{
+  currentLines.Remove(e.GetPointerId(0));
+  return true;
+}
+
+..
+
+protected override void OnSizeChanged(int w, int h, int oldw, int oldh)
+{
+  base.OnSizeChanged(w, h, oldw, oldh);
+  drawingSurface = Bitmap.CreateBitmap(w, h, Bitmap.Config.Argb8888); // full-screen bitmap
+  drawingCanvas  = new Canvas(drawingSurface); // the canvas will draw into the bitmap
+  paints.Clear();
+  coords.Clear();
+}
+
+..
+
+case MotionEventActions.Down:
+{
+  int id = e.GetPointerId(0);
+  paints.Add(id, GenerateRandomColorPaint());
+  var start = new MotionEvent.PointerCoords();
+  e.GetPointerCoords(id, start);
+  coords.Add(id, start);
+  return true;
+}
+
+..
+
+var id = e.GetPointerId(index);
+float x = e.GetX(index);
+float y = e.GetY(index);
+drawingCanvas.DrawLine(coords[id].X, coords[id].Y, x, y, paints[id]);
+coords[id].X = x;
+coords[id].Y = y;
+
+..
+
+protected override void OnDraw(Canvas canvas)
+{
+  canvas.DrawBitmap(drawingSurface, 0, 0, null);
+}
+
+..
+
+public void Clear()
+{
+  drawingCanvas.DrawColor(Color.Black, PorterDuff.Mode.Clear);
+  Invalidate();
+}
 
 
 ===> code listed in: ./and450-binding/Lab Materials/parts/part1.html
@@ -542,32 +1081,571 @@ public class Pi
     return quarterPi * 4;
   }
 }
+..
+
+double result = Com.Xamarin.Pi.Calculate(10000);
+
 
 ===> code listed in: ./and450-binding/Lab Materials/parts/part2.html
+
+..
+
+<ImageView
+  android:src="@drawable/logo"
+  android:layout_width="100dp"
+  android:layout_height="100dp" />
+
+..
+
+<TextView
+  android:text="@string/company_name"
+  android:layout_width="match_parent" 
+  android:layout_height="wrap_content" />
+
+..
+
+<TextView
+  android:id="@+id/phoneNumber"
+  android:layout_width="match_parent" 
+  android:layout_height="wrap_content" />
+
+..
+
+string pn = Com.Xamarin.Info.PhoneNumber;
+FindViewById<TextView>(Resource.Id.phoneNumber).Text = pn;
 
 
 ===> code listed in: ./and450-binding/Lab Materials/parts/part3.html
 
+..
+
+package com.xamarin.myaar;
+
+public class Calculator
+{
+  private   static double add     (double a, double b) { return a + b; }
+  protected static double subtract(double a, double b) { return a - b; }
+            static double multiply(double a, double b) { return a * b; }
+  public    static double divide  (double a, double b) { return a / b; }
+}
+
+..
+
+namespace Com.Xamarin.Myaar
+{
+  public class Calculator : Java.Lang.Object
+  {
+    public    static double Divide  (double p0, double p1);
+    protected static double Subtract(double p0, double p1);
+  }
+}
+
+..
+
+package com.xamarin.myaar;
+
+public class Rectangle
+{
+  private double width;
+  private double height;
+  private int    color;
+
+  public double getWidth() { return width; }
+  public void setWidth(double width) { this.width = width; }
+
+  public double getArea() { return width * height; }
+
+  public void setColor(int color) { this.color = color; }
+}
+..
+
+namespace Com.Xamarin.Myaar
+{
+  public class Rectangle : Java.Lang.Object
+  {
+    public virtual double Area { get; }
+
+    public virtual double Width { get; set; }
+
+    public virtual void SetColor(int p0);
+  }
+}
+
+..
+
+package com.xamarin.myaar;
+
+public interface WeightListener
+{
+  void weightChanged(double weight);
+}
+
+public class Scale
+{
+  private WeightListener listener;
+
+  public void setWeightListener(WeightListener listener)
+  {
+    this.listener = listener;
+  }
+}
+
+..
+
+namespace Com.Xamarin.Myaar
+{
+  public interface IWeightListener : IJavaObject, IDisposable
+  {
+    void WeightChanged(double p0);
+  }
+
+  public class WeightEventArgs : EventArgs
+  {
+    public double P0 { get; }
+  }
+
+  public class Scale : Java.Lang.Object
+  {
+    public virtual void SetWeightListener(IWeightListener p0);
+
+    public event EventHandler<WeightEventArgs> Weight;
+  }
+}
+
 
 ===> code listed in: ./csc350-async/Lab Materials/parts/part1.html
+
+..
+
+public void SearchAsync(string text)
+{
+    if (String.IsNullOrEmpty(text))
+        throw new ArgumentNullException("text");
+
+    string query = String.Format(SearchUrl, WebUtility.HtmlEncode(text));
+
+    WebClient wc = new WebClient();
+}   
+
+..
+
+public void SearchAsync(string text)
+{
+    ...
+    wc.DownloadStringCompleted += (sender, e) => 
+    {
+        if (e.Error == null)
+        {
+            string resultText = e.Result;
+
+            var results = JsonConvert.DeserializeObject<SearchResult>(resultText);
+        }
+    };
+    wc.DownloadStringAsync(new Uri(query));
+}   
+
+..
+
+public event Action<IEnumerable<SearchItem>, Exception> SearchComplete;
+public void SearchAsync(string text)
+{
+    ...
+    wc.DownloadStringCompleted += (sender, e) => 
+    {
+        if (e.Error == null)
+        {
+            string resultText = e.Result;
+
+            var results = JsonConvert.DeserializeObject<SearchResult>(resultText);
+            SearchComplete?.Invoke(results.results, null);
+        }
+        else
+        {
+            SearchComplete?.Invoke(null, e.Error);
+        }
+    };
+    ...
+}
+
+..
+
+void OnSearch(object sender, EventArgs e)
+{
+    if (String.IsNullOrEmpty(searchBar.Text))
+        return;
+
+    Data.Clear();
+    searchProgress.IsRunning = true;
+}
+
+..
+
+void OnSearch(object sender, EventArgs e)
+{
+    ...
+
+    MovieApi api = new MovieApi();
+    api.SearchComplete += (results, ex) => {
+        if (ex != null)
+        {
+            DisplayAlert("Error", ex.Message + "\r\nAre you connected to the Internet?", "OK");
+            return;
+        }
+
+        foreach (var item in results)
+            Data.Add(item);
+
+        searchProgress.IsRunning = false;
+    };
+
+    api.SearchAsync(searchBar.Text);
+}
 
 
 ===> code listed in: ./csc350-async/Lab Materials/parts/part2.html
 
+..
+
+public static IEnumerable<SearchItem> SearchAsync(string text)
+{
+    if (string.IsNullOrEmpty(text))
+        throw new ArgumentNullException("text");
+
+    string query = string.Format(SearchUrl, WebUtility.HtmlEncode(text));
+
+     WebClient wc = new WebClient();
+    string resultText = wc.DownloadString(query);
+
+    var results = JsonConvert.DeserializeObject<SearchResult>(resultText);
+    return results.results;
+} 
+
+..
+
+public static async Task<IEnumerable<SearchItem>> SearchAsync(string text)
+{
+    ...
+    string resultText = await wc.DownloadStringTaskAsync(query);
+} 
+
+..
+
+void OnSearch (object sender, EventArgs e)
+{
+    if (string.IsNullOrEmpty(searchBar.Text))
+        return;
+
+    Data.Clear();
+    searchProgress.IsRunning = true;
+
+    try
+    {
+        var results = MovieApi.Search(searchBar.Text);
+        foreach (var item in results)
+            Data.Add(item);
+    }
+    catch (WebException ex)
+    {
+        DisplayAlert("Error", ex.Message + "\r\nAre you connected to the Internet?", "OK");
+    }
+    finally
+    {
+        searchProgress.IsRunning = false;
+    }
+}
+
+..
+
+async void OnSearch (object sender, EventArgs e)
+{
+    if (string.IsNullOrEmpty(searchBar.Text))
+        return;
+
+    Data.Clear();
+    searchProgress.IsRunning = true;
+
+    try
+    {
+        var results = await MovieApi.SearchAsync(searchBar.Text);
+        foreach (var item in results)
+            Data.Add(item);
+    }
+    catch (WebException ex)
+    {
+        await DisplayAlert("Error", ex.Message + "\r\nAre you connected to the Internet?", "OK");
+    }
+    finally
+    {
+        searchProgress.IsRunning = false;
+    }
+}
+
 
 ===> code listed in: ./customizing-maps-ios231/Lab Materials/parts/part1.html
+
+..
+
+public class StoreAnnotation : MKPointAnnotation
+{
+    GroceryStore store;
+
+    public double TimeOpen {get { return store.TimeOpen; } }
+    public double TimeClosed {get { return store.TimeClosed; } }
+
+    public override string Title { get { return store.Name; } }
+    public override string Subtitle { get { return store.Description; } }
+    public override CLLocationCoordinate2D Coordinate
+    {
+        get {return new CLLocationCoordinate2D(store.Latitude, store.Longitude); }
+    }
+
+    public StoreAnnotation (GroceryStore store)
+    {
+        this.store = store;
+    }
+}
+
+..
+
+public override void ViewDidLoad ()
+{
+    ...
+    AddStoreAnnotations ();
+}
+
+void AddStoreAnnotations ()
+{
+    var stores = StoreFactory.GetStores ();
+
+    foreach (var store in stores) {
+        var annotation = new StoreAnnotation (store);
+        map.AddAnnotation (annotation);
+    }
+}
+
+..
+
+public override void ViewDidLoad ()
+{
+   ...
+   map.GetViewForAnnotation = (mapView, annotation) => {
+      var pinView = new MKPinAnnotationView (annotation, "pin");
+      pinView.PinColor = MKPinAnnotationColor.Purple;
+      return pinView;
+  };
+  ...
+} 
+
+..
+
+public class GroceryMapDelegate : MKMapViewDelegate
+{
+    public GroceryMapDelegate ()
+    {
+    }
+}
+
+..
+
+public override MKAnnotationView GetViewForAnnotation (MKMapView mapView, IMKAnnotation annotation)
+{
+    var pinView = new MKPinAnnotationView (annotation, "pin");
+
+    var storeAnnotation = annotation as StoreAnnotation;
+
+    if (storeAnnotation != null && storeAnnotation.TimeOpen < 9)
+        pinView.PinColor = MKPinAnnotationColor.Purple;//iOS6
+    else if (storeAnnotation != null)
+        pinView.PinTintColor = UIColor.Gray;//iOS9+
+
+    return pinView;
+}
 
 
 ===> code listed in: ./customizing-maps-ios231/Lab Materials/parts/part2.html
 
+..
+
+public override MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
+{
+  var pinView = new MKAnnotationView(annotation, "pin");
+
+  pinView.Image = UIImage.FromBundle("banana_pin.png");
+
+  return pinView;
+}
+
+..
+
+pinView.CenterOffset = new CoreGraphics.CGPoint (0, -20);
+
+..
+
+public override MKAnnotationView GetViewForAnnotation (MKMapView mapView, IMKAnnotation annotation)
+{
+    var pinView = mapView.DequeueReusableAnnotation ("pin");
+
+    if (pinView == null)
+    {
+        var pinView = new MKAnnotationView(annotation, "pin");
+        pinView.Image = UIImage.FromBundle("banana_pin.png");
+        pinView.CenterOffset = new CoreGraphics.CGPoint (0, -20);
+    }
+    else
+    {
+        pinView.Annotation = annotation;
+    }
+
+    return pinView;
+}
+
 
 ===> code listed in: ./customizing-maps-ios231/Lab Materials/parts/part3.html
+
+..
+
+public override MKAnnotationView GetViewForAnnotation (MKMapView mapView, IMKAnnotation annotation)
+{
+    MKAnnotationView view = mapView.DequeueReusableAnnotation ("pin");
+
+    if (pinView == null) {
+        ...
+
+        pinView.CanShowCallout = true;
+        pinView.LeftCalloutAccessoryView = new UIImageView (UIImage.FromBundle ("banana.png"));
+    }
+    ...
+}
+
+..
+
+if (pinView == null) {
+    ...
+    pinView.RightCalloutAccessoryView = UIButton.FromType (UIButtonType.DetailDisclosure);
+}
+
+..
+
+public override void CalloutAccessoryControlTapped (MKMapView mapView, MKAnnotationView view, UIControl control)
+{
+    var annotation = view.Annotation as StoreAnnotation;
+
+    if (annotation == null)
+        return;
+
+    var msg = String.Format ("Hours:\r\n{0} till {1}", annotation.TimeOpen, annotation.TimeClosed);
+
+    new UIAlertView (annotation.Title, msg, null, "OK", null).Show();
+}
 
 
 ===> code listed in: ./customizing-maps-ios231/Lab Materials/parts/part4.html
 
+..
+
+public async Task SearchAsync ()
+{
+    map.RemoveAnnotations (map.Annotations);//clear any existing results
+}
+
+..
+
+var request = new MKLocalSearchRequest ();
+request.NaturalLanguageQuery = "Grocery stores";
+request.Region = map.Region;
+
+..
+
+var response = await new MKLocalSearch(request).StartAsync ();
+
+..
+
+public async Task SearchAsync ()
+{
+    ...
+
+    if (response != null && response.MapItems.Length > 0) 
+    {
+        var stores = new List<GroceryStore>();
+
+        foreach (var item in response.MapItems) {
+        stores.Add(new GroceryStore()
+            {
+                Name = item.Name, 
+                PhoneNumber = item.PhoneNumber, 
+                Address = item.Placemark.Title,
+                Longitude = item.Placemark.Location.Coordinate.Longitude, 
+                Latitude = item.Placemark.Location.Coordinate.Latitude
+            });
+        }
+        AddStoreAnnotations(stores);
+    }
+}
+
+..
+
+public class GroceryMapDelegate : MKMapViewDelegate
+{
+    public Action MapViewChanged {get; set;}
+    ...
+    public override void RegionChanged (MKMapView mapView, bool animated)
+    {
+        if (MapViewChanged != null)
+            MapViewChanged (); 
+    }
+}
+
+..
+
+public partial class ViewController : UIViewController
+{
+    ...
+    public override void ViewDidLoad ()
+    {
+        ...
+        mapDelegate.MapViewChanged = () => SearchAsync (); 
+    }
+}
+
 
 ===> code listed in: ./customizing-maps-ios231/Lab Materials/parts/part5.html
+
+..
+
+directions.CalculateDirections ((MKDirectionsResponse response, NSError e) => {
+
+    if(this.route != null)
+        mapView.RemoveOverlay(this.route);
+
+    if(response == null || response.Routes.Length == 0)
+        return;
+
+    route = response.Routes[0].Polyline;
+
+    mapView.AddOverlay(route, MKOverlayLevel.AboveRoads);
+});
+
+..
+
+public override MKOverlayRenderer OverlayRenderer (MKMapView mapView, IMKOverlay overlay)
+{
+    if (overlay.GetType() == typeof(MKPolyline))
+    {
+        var route = (MKPolyline)overlay;
+        var renderer = new MKPolylineRenderer(route) { StrokeColor = UIColor.Red, LineWidth = 3.0f };
+        return renderer;
+    }
+    return null;
+}
+
+..
+
+public override void DidSelectAnnotationView (MKMapView mapView, MKAnnotationView view)
+{
+    var coord = ((StoreAnnotation)view.Annotation).Coordinate;
+    var destination = new MKMapItem (new MKPlacemark (coord, (MKPlacemarkAddress)null));
+    ShowDirections (destination, mapView);
+}
 
 
 ===> code listed in: ./customizing-table-views-ios115/Labs/parts/part1.html
@@ -831,14 +1909,267 @@ public override string[] SectionIndexTitles (UITableView tableView)
 
 ===> code listed in: ./ent172-using-xam-auth/Lab Materials/parts/part1.html
 
+..
+
+public override bool FinishedLaunching (UIApplication app, NSDictionary options)
+{
+    ...
+    global::Xamarin.Auth.Auth.Init ();
+    ...
+}
+
+..
+
+protected override void OnCreate (Bundle bundle)
+{
+    ...
+    global::Xamarin.Auth.Auth.Init (this, bundle);
+    ...
+}
+
+..
+
+void ImplicitButtonClicked (object sender, EventArgs e)
+{
+    var authenticator = new OAuth2Authenticator
+        (
+            ServerInfo.ClientId,
+            Scope,
+            ServerInfo.AuthorizationEndpoint,
+            ServerInfo.RedirectionEndpoint
+        );
+}
+
+void AuthorizationCodeButtonClicked (object sender, EventArgs e)
+{
+    var authenticator = new OAuth2Authenticator
+        (
+            ServerInfo.ClientId,
+            ServerInfo.ClientSecret,
+            Scope,
+            ServerInfo.AuthorizationEndpoint,
+            ServerInfo.RedirectionEndpoint,
+            ServerInfo.TokenEndpoint
+        );
+}
+
 
 ===> code listed in: ./ent172-using-xam-auth/Lab Materials/parts/part2.html
+
+..
+
+void ImplicitButtonClicked (object sender, EventArgs e)
+{
+    ...
+    authenticator.Completed += OnAuthCompleted;
+    authenticator.Error += OnAuthError;
+    ...
+}
+
+void AuthorizationCodeButtonClicked (object sender, EventArgs e)
+{
+    ...
+    authenticator.Completed += OnAuthCompleted;
+    authenticator.Error += OnAuthError;
+    ...
+}
+
+void OnAuthCompleted (object sender, AuthenticatorCompletedEventArgs e)
+{
+}
+
+void OnAuthError (object sender, AuthenticatorErrorEventArgs e)
+{
+}
+
+..
+
+void OnAuthCompleted (object sender, AuthenticatorCompletedEventArgs e)
+{
+    var authenticator = sender as OAuth2Authenticator;
+
+    if (authenticator != null) 
+    {
+        authenticator.Completed -= OnAuthCompleted;
+        authenticator.Error -= OnAuthError;
+    }
+}
+
+void OnAuthError (object sender, AuthenticatorErrorEventArgs e)
+{    
+    var authenticator = sender as OAuth2Authenticator;
+
+    if (authenticator != null) 
+    {
+        authenticator.Completed -= OnAuthCompleted;
+        authenticator.Error -= OnAuthError;
+    }
+}
+
+..
+
+void ImplicitButtonClicked (object sender, EventArgs e)
+{
+    ...
+    var presenter = new OAuthLoginPresenter ();
+    presenter.Login (authenticator);
+}
+
+void AuthorizationCodeButtonClicked (object sender, EventArgs e)
+{
+    ...
+    var presenter = new OAuthLoginPresenter ();
+    presenter.Login (authenticator);
+}
+
+..
+
+public partial class MainPage : ContentPage
+{
+    ...
+    Account 		account;
+    AccountStore 	store;
+
+    public MainPage ()
+    {
+        ...
+        store = AccountStore.Create ();
+        account = store.FindAccountsForService (ServiceId).FirstOrDefault ();
+    }
+    
+    void OnAuthCompleted (object sender, AuthenticatorCompletedEventArgs e)
+    {
+        var authenticator = sender as OAuth2Authenticator;
+        ...
+        if (e.IsAuthenticated)
+        {
+            if (this.account != null)
+                store.Delete (this.account, ServiceId);
+
+            store.Save(account = e.Account, ServiceId);
+        }
+    }
+}
 
 
 ===> code listed in: ./ent172-using-xam-auth/Lab Materials/parts/part3.html
 
+..
+
+async void GetProfileButtonClicked (object sender, EventArgs e)
+{
+    try
+    {
+        var request = new OAuth2Request("GET", ServerInfo.ApiEndpoint, null, account);
+        var response = await request.GetResponseAsync();
+
+        var text = await response.GetResponseTextAsync();
+
+        var json = JObject.Parse(text);
+
+        var name     = (string)json["Name"];
+        var email    = (string)json["Email"];
+        var imageUrl = (string)json["ImageUrl"];
+
+        nameText .Text = name;
+        emailText.Text = email;
+
+       statusText.Text = "Get data succeeded";
+    }
+    catch (Exception x)
+    {
+        statusText.Text = "Get data failure: " + x.Message;
+    }
+}
+
+..
+
+async void GetProfileButtonClicked (object sender, EventArgs e)
+{
+    try
+    {
+        ...
+        var imageUrl = (string)json["ImageUrl"];
+        ...
+
+        var imageRequest = new OAuth2Request("GET", new Uri(imageUrl), null, account);
+		var stream = await (await imageRequest.GetResponseAsync()).GetResponseStreamAsync();
+
+		profileImage.Source = ImageSource.FromStream ( ()=> stream );
+    }
+    catch (Exception x)
+    {
+        statusText.Text = "Get data failure: " + x.Message;
+    }
+}
+
 
 ===> code listed in: ./ent172-using-xam-auth/Lab Materials/parts/part4.html
+
+..
+
+void OnAuthCompleted (object sender, AuthenticatorCompletedEventArgs e)
+{
+    ...
+    if (e.IsAuthenticated)
+    {
+        ...
+        if (account.Properties.ContainsKey("expires_in"))
+        {
+            var expires = int.Parse (account.Properties ["expires_in"]);
+
+            statusText.Text = "Token expires at: " + expires + "s";
+        }
+
+        if (account.Properties.ContainsKey("refresh_token"))
+            refreshButton.IsEnabled = true;
+    }
+}
+
+..
+
+void RefreshButtonClicked (object sender, EventArgs e)
+{
+    var refreshToken = account.Properties["refresh_token"];
+    
+    if (string.IsNullOrWhiteSpace(refreshToken))
+        return;
+    
+    var queryValues = new Dictionary<string, string> 
+    {
+        {"refresh_token", refreshToken},
+        {"client_id", ServerInfo.ClientId},
+        {"grant_type", "refresh_token"},
+        {"client_secret", ServerInfo.ClientSecret}
+    };
+}
+
+..
+
+async void RefreshButtonClicked (object sender, EventArgs e)
+{
+    ...
+    
+    var authenticator = new OAuth2Authenticator
+        (
+            ServerInfo.ClientId,
+            ServerInfo.ClientSecret,
+            "profile",
+            ServerInfo.AuthorizationEndpoint,
+            ServerInfo.RedirectionEndpoint,
+            ServerInfo.TokenEndpoint
+        );
+
+    var result = await authenticator.RequestAccessTokenAsync(queryValues);
+
+    if (result.ContainsKey("access_token"))
+        account.Properties["access_token"] = result["access_token"];
+
+    if (result.ContainsKey("refresh_token"))
+        account.Properties["refresh_token"] = result["refresh_token"];
+
+    store.Save(account, ServiceId);
+}
 
 
 ===> code listed in: ./ios101-intro-to-ios/Lab Materials/parts/homework.html
@@ -853,8 +2184,6 @@ tipAmount.InsertSegment("15%", 1, false);
 ===> code listed in: ./ios101-intro-to-ios/Lab Materials/parts/part1.html
 
 ..
-⌘+B
-..
 
 public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
 {
@@ -868,15 +2197,115 @@ public override bool FinishedLaunching(UIApplication application, NSDictionary l
     return true;
 }
 
-..
-CTRL+SHIFT+B
 
 ===> code listed in: ./ios101-intro-to-ios/Lab Materials/parts/part2.html
 
 ..
-⌘+B
+
+using System;
+using UIKit;
+
+namespace TipCalculator
+{
+    public class MyViewController : UIViewController
+    {
+        public MyViewController()
+        {
+        }
+    }
+}
+
 ..
-CTRL+SHIFT+B
+
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    Window = new UIWindow(UIScreen.MainScreen.Bounds);
+}
+
+..
+
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    Window = new UIWindow(UIScreen.MainScreen.Bounds);
+
+    // Assign the root view controller
+    Window.RootViewController = new MyViewController();
+}
+
+..
+
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    Window = new UIWindow(UIScreen.MainScreen.Bounds);
+
+    // Assign the root view controller
+    Window.RootViewController = new MyViewController();
+
+    // make the window visible
+    Window.MakeKeyAndVisible();
+
+    return true;
+}
+
+..
+
+using System;
+using UIKit;
+
+namespace TipCalculator
+{
+    public class MyViewController : UIViewController
+    {
+        public MyViewController()
+        {
+        }
+    }
+}
+
+..
+
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    Window = new UIWindow(UIScreen.MainScreen.Bounds);
+}
+
+..
+
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    Window = new UIWindow(UIScreen.MainScreen.Bounds);
+
+    // Assign the root view controller
+    Window.RootViewController = new MyViewController();
+}
+
+..
+
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    Window = new UIWindow(UIScreen.MainScreen.Bounds);
+
+    // Assign the root view controller
+    Window.RootViewController = new MyViewController();
+
+    // make the window visible
+    Window.MakeKeyAndVisible();
+
+    return true;
+}
+
 
 ===> code listed in: ./ios101-intro-to-ios/Lab Materials/parts/part3.html
 
@@ -889,8 +2318,108 @@ public override void ViewDidLoad()
     this.View.BackgroundColor = UIColor.Yellow;
 }
 
+..
+
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+    ...
+    
+    UITextField totalAmount = new UITextField(
+                    new CGRect(20, 28, View.Bounds.Width-40, 35)) 
+    {
+        KeyboardType = UIKeyboardType.DecimalPad,
+        BorderStyle = UITextBorderStyle.RoundedRect,
+        Placeholder = "Enter Total Amount"
+    };
+}
+
+..
+
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+    ...
+    
+    UIButton calcButton = new UIButton(UIButtonType.Custom) 
+    {
+        Frame = new CGRect(20, 71, View.Bounds.Width - 40, 45),
+        BackgroundColor = UIColor.FromRGB(0, 0.5f, 0),
+    };
+    calcButton.SetTitle("Calculate", UIControlState.Normal);
+}
+
+..
+
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+    ...
+    
+     UILabel resultLabel = new UILabel(new CGRect(20, 124, View.Bounds.Width-40, 40)) 
+     {
+        TextColor = UIColor.Blue,
+        TextAlignment = UITextAlignment.Center,
+        Font = UIFont.SystemFontOfSize(24),
+        Text = "Tip is $0.00"
+    };
+}
+
+..
+
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+    ...
+    
+    UITextField totalAmount = ...;
+    UIButton calcButton = ...;
+    UILabel resultLabel = ...; 
+    
+    View.AddSubviews(totalAmount, calcButton, resultLabel);
+}
+
 
 ===> code listed in: ./ios101-intro-to-ios/Lab Materials/parts/part4.html
+
+..
+
+namespace TipCalculator
+{
+    public static class TipCalculator
+    {
+        public static double GetTip(double amount, double percentage)
+        {
+            return amount * percentage / 100.0;
+        }
+    }
+}
+
+..
+
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+    ...
+    
+    View.AddSubviews(new UIView[] { totalAmount, calcButton, resultLabel });
+
+    calcButton.TouchUpInside += (s, e) => {
+        double value = 0;
+        Double.TryParse(totalAmount.Text, out value);
+        resultLabel.Text = string.Format("Tip is {0:C}", TipCalculator.GetTip(value, 20));
+    };
+}
+
+..
+
+ calcButton.TouchUpInside += (s, e) => {
+
+    totalAmount.ResignFirstResponder();
+
+    double value = 0;
+    ...
+};
 
 
 ===> code listed in: ./ios102-designer/Lab Materials/parts/part1.html
@@ -901,8 +2430,69 @@ public override void ViewDidLoad()
 
 ===> code listed in: ./ios102-designer/Lab Materials/parts/part3.html
 
+..
+
+public partial class ViewController : UIViewController
+{
+   SimpleParticleGen fireworks;
+   ...
+   public override void ViewDidLoad ()
+   {
+      base.ViewDidLoad ();
+
+      fireworks = new SimpleParticleGen (UIImage.FromFile ("xamlogo.png"), View);
+  }
+
+..
+
+public override void ViewDidLoad ()
+{
+   ...
+   buttonStart.TouchUpInside += delegate(object sender, EventArgs e) 
+   {
+      fireworks.Start();
+   };
+}
+
+..
+
+partial void SwitchNight_ValueChanged (UISwitch sender)
+{
+   if(switchNight.On)
+      this.View.BackgroundColor = UIColor.FromRGB(25,25,112);
+   else
+      this.View.BackgroundColor = UIColor.White;
+} 
+
+..
+
+partial void SliderSize_ValueChanged (UISlider sender)
+{
+   fireworks.ScaleMax = (nfloat)sliderSize.Value;
+}
+
 
 ===> code listed in: ./ios102-designer/Lab Materials/parts/part4.html
+
+..
+
+partial void buttonAbout_TouchUpInside (UIButton sender)
+{
+   var aboutVC = (AboutViewController)this.Storyboard.InstantiateViewController("AboutViewController");
+
+   this.PresentViewController(aboutVC, true, null);
+}
+
+..
+
+partial class AboutViewController : UIViewController
+{
+   ...
+   partial void buttonClose_TouchUpInside (UIButton sender)
+   {
+      this.DismissViewController(true, null);
+   }
+}
 
 
 ===> code listed in: ./ios102-designer/Lab Materials/parts/part5.html
@@ -920,6 +2510,15 @@ public override void ViewDidLoad()
 
 ..
 
+UITableView tableView;
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+                    Add(tableView = new UITableView(this.View.Bounds));
+}
+
+..
+
 // This assumes your TableView is in a field named "tableView"
 tableView.TranslatesAutoresizingMaskIntoConstraints = false;
 this.View.AddConstraint(NSLayoutConstraint.Create(tableView, NSLayoutAttribute.Top,
@@ -934,12 +2533,90 @@ this.View.AddConstraint(NSLayoutConstraint.Create(tableView, NSLayoutAttribute.H
 
 ===> code listed in: ./ios110-tables-views-in-ios/Lab Materials/parts/part2.html
 
+..
+
+partial class TableViewController : UITableViewController
+{
+    ...
+
+    EmailServer emailServer = new EmailServer();
+
+    public override nint RowsInSection(UITableView tableview, nint section)
+    {
+       return emailServer.Email.Count;
+    }
+}
+
+..
+
+public override UITableViewCell GetCell(UITableView tableView, 
+                                        NSIndexPath indexPath)
+{
+    UITableViewCell cell = new UITableViewCell(CGRect.Empty);
+    var item = emailServer.Email[indexPath.Row];
+
+    cell.TextLabel.Text = item.Subject;
+    return cell;
+}
+
+..
+
+class EmailServerDataSource : UITableViewSource
+{
+    EmailServer emailServer = new EmailServer();
+
+    public override nint RowsInSection(UITableView tableview, nint section)
+    {
+        return emailServer.Email.Count;
+    }
+
+    public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+    {
+        UITableViewCell cell = new UITableViewCell(CGRect.Empty);
+        var item = emailServer.Email[indexPath.Row];
+
+        cell.TextLabel.Text = item.Subject;
+        return cell;
+    }
+}
+
 
 ===> code listed in: ./ios110-tables-views-in-ios/Lab Materials/parts/part3.html
 
 ..
 
+public override UITableViewCell GetCell(UITableView tableView,
+                                        NSIndexPath indexPath)
+{
+    UITableViewCell cell = new UITableViewCell(UITableViewCellStyle.Default, null);
+    var item = emailServer.Email[indexPath.Row];
+
+    cell.TextLabel.Text = item.Subject;
+    cell.ImageView.Image = item.GetImage();
+    return cell;
+}
+
+..
+
 tableView.ContentInset = new UIEdgeInsets(20, 0, 0, 0);
+
+..
+
+public override UITableViewCell GetCell(UITableView tableView,
+                                        NSIndexPath indexPath)
+{
+    UITableViewCell cell = new UITableViewCell(UITableViewCellStyle.Subtitle, null);
+    var item = emailServer.Email[indexPath.Row];
+
+    cell.TextLabel.Font = UIFont.FromName("Helvetica Light", 14);
+    cell.DetailTextLabel.Font = UIFont.FromName("Helvetica Light", 12);
+    cell.DetailTextLabel.TextColor = UIColor.LightGray;
+
+    cell.TextLabel.Text = item.Subject;
+    cell.ImageView.Image = item.GetImage();
+    cell.DetailTextLabel.Text = item.Body;
+    return cell;
+}
 
 ..
 
@@ -997,13 +2674,108 @@ var detailViewController =
 
 ..
 
+class EmailServerDataSource : UITableViewSource
+{
+    ...
+    ViewController owner;
+
+    public EmailServerDataSource(ViewController owner)
+    {
+        this.owner = owner;
+    }
+
+    public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+    {
+        // Create the View Controller in the Main storyboard.
+        var storyboard = UIStoryboard.FromName("Main", null);
+        var detailViewController = 
+             (DetailsViewController) storyboard.InstantiateViewController(
+                "DetailsViewController");
+
+        // Set the email details
+        var emailItem = emailServer.Email[indexPath.Row];
+        detailViewController.Item = emailItem;
+
+        // Show the new page as a "modal"
+        owner.ShowDetailViewController(detailViewController, owner);
+    }
+
+    ...
+}
+
+..
+
 var controller = UIAlertController.Create("Email Details", 
          emailItem.ToString(), UIAlertControllerStyle.Alert);
 controller.AddAction(UIAlertAction.Create("OK", 
         UIAlertActionStyle.Default, null));
 
+..
+
+public override void AccessoryButtonTapped(UITableView tableView, 
+                                           NSIndexPath indexPath)
+{
+    var emailItem = emailServer.Email[indexPath.Row];
+
+    var controller = UIAlertController.Create("Email Details", 
+                         emailItem.ToString(), UIAlertControllerStyle.Alert);
+    controller.AddAction(UIAlertAction.Create("OK", 
+                         UIAlertActionStyle.Default, null));
+
+    owner.PresentViewController(controller, true, null);
+}
+
 
 ===> code listed in: ./ios110-tables-views-in-ios/Lab Materials/parts/part5.html
+
+..
+
+const string CellId = "EmailCell";
+
+public override UITableViewCell GetCell(UITableView tableView, 
+                                       NSIndexPath indexPath)
+{
+    UITableViewCell cell = tableView.DequeueReusableCell(CellId);
+    if (cell == null) {
+        cell = new UITableViewCell(UITableViewCellStyle.Subtitle, CellId);
+        cell.TextLabel.Font = UIFont.FromName("Helvetica Light", 14);
+        cell.DetailTextLabel.Font = UIFont.FromName("Helvetica Light", 12);
+        cell.DetailTextLabel.TextColor = UIColor.LightGray;
+        cell.Accessory = UITableViewCellAccessory.DetailDisclosureButton;
+
+    } else if (cell.ImageView.Image != null) {
+        cell.ImageView.Image.Dispose();
+    }
+
+    var item = emailServer.Email[indexPath.Row];
+
+    cell.TextLabel.Text = item.Subject.Substring(0,20) + "...";
+    cell.ImageView.Image = item.GetImage();
+    cell.DetailTextLabel.Text = item.Body;
+
+    return cell;
+}
+
+..
+
+const string CellId = "EmailCell";
+
+public override UITableViewCell GetCell(UITableView tableView, 
+                                        NSIndexPath indexPath)
+{
+   UITableViewCell cell = tableView.DequeueReusableCell(CellId, indexPath);
+   if (cell.ImageView.Image != null) {
+       cell.ImageView.Image.Dispose();
+   }
+
+   var item = emailServer.Email[indexPath.Row];
+
+   cell.TextLabel.Text = item.Subject.Substring(0,20) + "...";
+   cell.ImageView.Image = item.GetImage();
+   cell.DetailTextLabel.Text = item.Body;
+
+   return cell;
+}
 
 
 ===> code listed in: ./ios205-navigation/Lab Materials/Part 01 Resources/Completed/Clock/bin/iPhoneSimulator/Debug/Clock.app/About.html
@@ -1038,28 +2810,277 @@ controller.AddAction(UIAlertAction.Create("OK",
 
 ===> code listed in: ./ios205-navigation/Lab Materials/parts/part1.html
 
+..
+
+public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
+{
+   switch (indexPath.Row)
+   {
+   case 0: //clock
+      var clockVC = controller.Storyboard.InstantiateViewController ("ClockViewController");
+      controller.NavigationController.PushViewController (clockVC, true);
+	    break;
+   case 1://stopwatch
+      var stopwatchVC = controller.Storyboard.InstantiateViewController ("StopwatchViewController");
+      controller.NavigationController.PushViewController (stopwatchVC, true);
+      break;
+   case 2://about
+	    var aboutVC = controller.Storyboard.InstantiateViewController ("AboutViewController");
+	    controller.NavigationController.PushViewController (aboutVC, true);
+	    break;
+   }
+}
+            
 
 ===> code listed in: ./ios205-navigation/Lab Materials/parts/part2.html
 
 
 ===> code listed in: ./ios205-navigation/Lab Materials/parts/part3.html
 
+..
+
+public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
+{
+   switch (indexPath.Row)
+   {
+   case 0: //clock
+      var clockVC = controller.Storyboard.InstantiateViewController ("ClockViewController");
+      controller.ShowDetailViewController (clockVC, controller);
+      break;
+   case 1://stopwatch
+      var stopwatchVC = controller.Storyboard.InstantiateViewController ("StopwatchViewController");
+      controller.ShowDetailViewController (stopwatchVC, controller);
+      break;
+   case 2://about
+      var aboutVC = controller.Storyboard.InstantiateViewController ("AboutViewController");
+      controller.ShowDetailViewController (aboutVC, controller);
+      break;
+   }
+}
+       
+..
+
+public override void ViewDidLoad ()
+{
+   base.ViewDidLoad ();
+
+   var clockVC = Storyboard.InstantiateViewController ("ClockViewController");
+   ShowDetailViewController (clockVC, this);
+}
+       
 
 ===> code listed in: ./ios210-backgrounding/Lab Resources/parts/part1.html
 
+..
+
+public async override void DidEnterBackground (UIApplication app)
+{
+  Logger.Log ("DidEnterBackground() - entered background");
+
+  // Begin Finite-Length Task.
+  this.taskId = app.BeginBackgroundTask (null);
+
+  // Start saving the user choices.
+  await Task.Run (() => this.SaveUserChoices ());
+
+  // End Finite-Length Task, finished.
+  if(this.taskId != -1)
+  {
+    UIApplication.SharedApplication.EndBackgroundTask (this.taskId);
+    this.taskId = -1;
+  }
+}
+
+..
+
+public override void WillEnterForeground (UIApplication app)
+{
+  Logger.Log ("WillEnterForeground() - coming from background into foreground");
+  // End task, no longer needed.
+  if (this.taskId >= 0)
+  {
+    app.EndBackgroundTask (this.taskId);
+    this.taskId = -1;
+  }
+}
+
 
 ===> code listed in: ./ios210-backgrounding/Lab Resources/parts/part2.html
+
+..
+
+partial class CancellableTaskViewController : UIViewController
+{
+   ...
+   CancellationTokenSource cts = new CancellationTokenSource ();
+   ...
+}
+
+..
+
+try {
+   await Task.Run (() => 
+      PiHelper.CalcPi (pieceOfPi => this.UpdateUi(pieceOfPi), this.cts.Token), 
+       this.cts.Token);
+}
+catch (OperationCanceledException) {
+   Console.WriteLine("Calculation canceled.");
+   this.IsCalculating = false;
+}
+
+..
+
+void UpdateUi(string pieceOfPi)
+{
+   this.cts.Token.ThrowIfCancellationRequested ();
+   ...
+}
+
+..
+
+async partial void HandleCalculatePi (UIButton sender)
+{
+  if(this.IsCalculating)
+  {
+    this.IsCalculating = false;
+    btnCalculate.SetTitle ("Start calculating", UIControlState.Normal);
+    this.cts.Cancel();
+
+    return;
+  }
+
+  this.IsCalculating = true;
+  btnCalculate.SetTitle ("Stop calculating", UIControlState.Normal);
+  this.txtPi.Text = string.Empty;
+  this.cts = new CancellationTokenSource();
+  ...
+}
+
+..
+
+void HandleBackgroundTimeExpires()
+{
+   this.cts.Cancel ();
+}
 
 
 ===> code listed in: ./ios211-background-modes-and-file-transfers/Lab Resources/parts/part1.html
 
 ..
 //TODO
+..
+
+public override void ViewDidLoad()
+{
+   base.ViewDidLoad();
+   var audioSession = AVAudioSession.SharedInstance();
+   audioSession.SetCategory (AVAudioSessionCategory.Playback);
+   audioSession.SetActive (true);
+
+   // Setup the UI
+   this.InitUi ();
+}
+
+..
+
+void PlayAudio(SongInfo songInfo)
+{
+   this.StopAudio ();
+
+   NSError error;
+   this.audioPlayer = new AVAudioPlayer(NSUrl.FromFilename(songInfo.FullDestinationFilePath), "mp3", out error);
+
+   if(error == null)
+   {
+      this.audioPlayer.Play();
+      // [...]
+   }
+   ...
+
+..
+
+public override void ViewDidAppear (bool animated)
+{
+   base.ViewDidAppear (animated);
+   UIApplication.SharedApplication.BeginReceivingRemoteControlEvents ();
+   this.BecomeFirstResponder();
+}
+
+public override void ViewDidDisappear (bool animated)
+{
+   base.ViewDidDisappear (animated);
+   UIApplication.SharedApplication.EndReceivingRemoteControlEvents ();
+   this.ResignFirstResponder();
+}
+
 
 ===> code listed in: ./ios211-background-modes-and-file-transfers/Lab Resources/parts/part2.html
 
+..
+
+void InitializeSession()
+{
+  using (var sessionConfig = UIDevice.CurrentDevice.CheckSystemVersion(8, 0)
+    ? NSUrlSessionConfiguration.CreateBackgroundSessionConfiguration(sessionId)
+    : NSUrlSessionConfiguration.BackgroundSessionConfiguration (sessionId))
+  {
+    sessionConfig.AllowsCellularAccess = true;
+    sessionConfig.NetworkServiceType = NSUrlRequestNetworkServiceType.Default;
+    var sessionDelegate = new CustomSessionDownloadDelegate (this);
+    this.session = NSUrlSession.FromConfiguration (sessionConfig, sessionDelegate, null);
+  }
+}
+
+..
+
+void EnqueueDownload()
+{
+  var downloadTask = this.session.CreateDownloadTask (NSUrl.FromString (DownloadController.downloadUrl));
+
+  if (downloadTask == null)
+  {
+	  new UIAlertView (string.Empty, "Failed to create download task! Please retry.", null, "OK").Show ();
+	  return;
+  }
+
+  downloadTask.Resume ();
+}
+
+..
+
+public override void HandleEventsForBackgroundUrl (UIApplication application, 
+         string sessionIdentifier, Action completionHandler)
+{
+   BackgroundSessionCompletionHandler = completionHandler;
+}
+
 
 ===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part1.html
+
+..
+
+public async override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+
+    this.NavigationItem.RightBarButtonItem = this.EditButtonItem;
+    ...
+}
+
+..
+
+public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
+{
+  return true;
+}
+
+..
+
+public override UITableViewCellEditingStyle EditingStyleForRow(
+                   UITableView tableView, NSIndexPath indexPath)
+{
+    return UITableViewCellEditingStyle.Delete;
+}
 
 
 ===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part2.html
@@ -1068,12 +3089,134 @@ controller.AddAction(UIAlertAction.Create("OK",
 
 await new DataStore().Delete(expense);
 
+..
+
+public async override void CommitEditingStyle(UITableView tableView, 
+        UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
+{
+    if (editingStyle == UITableViewCellEditingStyle.Delete) {
+       var expense = expenses[indexPath.Row];
+       expenses.Remove(expense);
+       tableView.DeleteRows(new[] { indexPath }, UITableViewRowAnimation.Automatic);
+       await new DataStore().Delete(expense);
+    }
+}
+
+..
+
+Expense newExpense;
+
+void OnAddExpense()
+{
+     newExpense = new Expense();
+     PerformSegue("showDetail", this);
+}
+
+..
+
+public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
+{
+    if (segue.Identifier == "showDetail") {
+        var detailViewController = segue.DestinationViewController as ExpenseDetailViewController;
+        if (detailViewController != null) {
+            var selectedExpense = newExpense;
+            if (selectedExpense == null)
+                selectedExpense = expenses[TableView.IndexPathForSelectedRow.Row];
+            detailViewController.SelectedExpense = selectedExpense;
+        }
+    }
+}
+
+..
+
+public override void ViewWillAppear(bool animated)
+{
+    // If we are adding an expense, and it was saved to the database
+    // (e.g. the Id > 0) then add it to our collection and reload the
+    // TableView with the new data.
+    if (newExpense != null) {
+        if (newExpense.Id != 0) {
+            expenses.Add(newExpense);
+            TableView.ReloadData();
+        }
+        newExpense = null;
+    }
+}
+
+..
+
+public async override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+    ...
+    UIBarButtonItem addButton = new UIBarButtonItem(
+             UIBarButtonSystemItem.Add, OnAddExpense);
+    this.NavigationItem.LeftBarButtonItem = addButton;
+    ...
+}
+
+void OnAddExpense(object sender, EventArgs e)
+{
+    ...
+}
+
 
 ===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part3.html
 
 ..
 
+UITableViewRowAction[ ] editActions;
+
+public override UITableViewRowAction[] EditActionsForRow(
+          UITableView tableView, NSIndexPath indexPath)
+{
+    if (editActions == null) {
+        editActions = new[] {
+            UITableViewRowAction.Create(
+                        UITableViewRowActionStyle.Normal, 
+                        "Billable", OnFlipBillable),
+            UITableViewRowAction.Create(
+                        UITableViewRowActionStyle.Normal, 
+                        "Not Billable", OnFlipBillable),
+            UITableViewRowAction.Create(
+                        UITableViewRowActionStyle.Destructive,
+                        "Delete", OnDelete),
+        };
+        editActions[0].BackgroundColor = UIColor.Blue;
+    }
+
+    Expense expense = expenses[indexPath.Row];
+
+    var rowActions = new UITableViewRowAction[2];
+    rowActions[0] = (expense.Billable)
+        ? editActions[1] : editActions[0];
+    rowActions[1] = editActions[2];
+    return rowActions;
+}
+
+..
+
 await new DataStore().Update(expense);
+
+..
+
+ async void OnFlipBillable(UITableViewRowAction rowAction, NSIndexPath indexPath)
+ {
+     Expense expense = expenses[indexPath.Row];
+     expense.Billable = !expense.Billable;
+     TableView.ReloadRows(new[] { indexPath }, UITableViewRowAnimation.Automatic);
+     await new DataStore().Update(expense);
+ }
+
+..
+
+async void OnDelete(UITableViewRowAction rowAction, NSIndexPath indexPath)
+{
+    Expense expense = expenses[indexPath.Row];
+    expenses.RemoveAt(indexPath.Row);
+    TableView.DeleteRows(new[] { indexPath }, UITableViewRowAnimation.Automatic);
+    await new DataStore().Delete(expense);
+}
 
 
 ===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part4.html
@@ -1082,8 +3225,55 @@ await new DataStore().Update(expense);
 
 expenses = (await new DataStore().Reset()).ToList();
 
+..
+
+public async override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+
+    ...
+
+    UIRefreshControl refreshControl = new UIRefreshControl();
+    refreshControl.ValueChanged += async (sender, e) => {
+        expenses = (await new DataStore().Reset()).ToList();
+        BeginInvokeOnMainThread(() => {
+            TableView.ReloadData();
+            refreshControl.EndRefreshing();
+        });
+    };
+    this.RefreshControl = refreshControl;
+
+    ...
+}
+
 
 ===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part5.html
+
+..
+
+UISearchController searchController;
+
+public async override void ViewDidLoad()
+{
+    ...
+    this.RefreshControl = refreshControl;
+
+    expenses = new List<Expense>();
+
+    searchController = new UISearchController((UIViewController)null);
+    searchController.SearchResultsUpdater = this;
+    searchController.DimsBackgroundDuringPresentation = false;
+    ...
+}
+
+..
+
+searchController.DimsBackgroundDuringPresentation = false;
+...
+TableView.TableHeaderView = searchController.SearchBar;
+DefinesPresentationContext = true;
+searchController.SearchBar.SizeToFit();
+...
 
 ..
 
@@ -1101,12 +3291,131 @@ void FilterContentForSearchText(string text)
     TableView.ReloadData();
 }
 
+..
+
+partial class ExpenseListViewController : UITableViewController, 
+     IUISearchResultsUpdating
+{
+    ...
+
+    List<Expense> filteredExpenses;
+    public void UpdateSearchResultsForSearchController(
+         UISearchController searchController)
+    {
+        if (searchController.Active)
+            filteredExpenses = new List<Expense>();
+        else
+            filteredExpenses = null;
+
+        FilterContentForSearchText(searchController.SearchBar.Text);            
+    }
+}
+
+..
+
+async void OnFlipBillable(UITableViewRowAction rowAction, NSIndexPath indexPath)
+{
+    Expense expense = filteredExpenses != null ? filteredExpenses[indexPath.Row] : expenses[indexPath.Row];
+    expense.Billable = !expense.Billable;
+    TableView.ReloadRows(new[] { indexPath }, UITableViewRowAnimation.Automatic);
+    await new DataStore().Update(expense);
+}
+
+public override nint RowsInSection(UITableView tableview, nint section)
+{
+    if (filteredExpenses != null)
+        return filteredExpenses.Count;
+   ...
+}
+
+public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+{
+    var cell = tableView.DequeueReusableCell(CellIdentifier, indexPath);
+
+    var expense = (filteredExpenses != null)
+        ? filteredExpenses[indexPath.Row]
+        : expenses[indexPath.Row];
+    ...
+}
+
+async Task DeleteExpense(int row, NSIndexPath indexPath)
+{
+    Expense expense = filteredExpenses != null ? filteredExpenses[row] : expenses[row];
+    expenses.Remove(expense);
+    if (filteredExpenses != null)
+    {
+        filteredExpenses.Remove(expense);
+    }
+    TableView.DeleteRows(new[] { indexPath }, UITableViewRowAnimation.Automatic);
+    await new DataStore().Delete(expense);
+}
+
+public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
+{
+    if (segue.Identifier == "showDetail") {
+        var detailViewController = segue.DestinationViewController as ExpenseDetailViewController;
+        if (detailViewController != null) {
+            // if we are adding expense.
+            var selectedExpense = newExpense;
+            if (selectedExpense == null)
+            {
+              // See if this is the filtered list.
+              selectedExpense = (filteredExpenses != null)
+                ? filteredExpenses[TableView.IndexPathForSelectedRow.Row]
+                : expenses[TableView.IndexPathForSelectedRow.Row];
+            }
+            detailViewController.SelectedExpense = selectedExpense;
+        }
+    }
+}
+
 
 ===> code listed in: ./ios215-editing-tableviews/Lab Materials/parts/part6.html
 
 ..
 
 new[] { "All", "Lodging", "Meal", "Transportation", "Other" });
+
+..
+
+public async override void ViewDidLoad()
+{
+  ...
+  searchController.DimsBackgroundDuringPresentation = false;
+
+  searchController.SearchBar.ScopeButtonTitles = new[] { "All", "Lodging", 
+       "Meal", "Transportation", "Other" });
+  ...
+}
+
+..
+
+void FilterContentForSearchText(string text, string scope)
+{
+    if (filteredExpenses != null) {
+        filteredExpenses.Clear();
+        filteredExpenses.AddRange(
+            expenses.Where(e => 
+                (scope == "All" || e.Category == scope)
+                && (string.IsNullOrWhiteSpace(text) 
+                   || e.Title.ToUpper().Contains(text.ToUpper()))));
+    }
+
+    TableView.ReloadData();
+}
+
+..
+
+public void UpdateSearchResultsForSearchController(
+     UISearchController searchController)
+{
+    ...
+
+    nint selectedScope = searchController.SearchBar.SelectedScopeButtonIndex;
+    string scope = searchController.SearchBar.ScopeButtonTitles[selectedScope];
+
+    FilterContentForSearchText(searchController.SearchBar.Text, scope);
+}
 
 ..
 
@@ -1117,12 +3426,54 @@ selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
 
 [Export ("searchBar:selectedScopeButtonIndexDidChange:")]
 
+..
+
+[Export ("searchBar:selectedScopeButtonIndexDidChange:")]
+public virtual void ScopeButtonChanged(UISearchBar searchBar, int selectedScope)
+{
+    string scope = searchBar.ScopeButtonTitles[selectedScope];
+    FilterContentForSearchText(searchBar.Text, scope);
+}
+
 
 ===> code listed in: ./ios230-maps-and-location-in-ios/Lab Materials/parts/part1.html
+
+..
+
+partial void btnStandard_Activated (UIBarButtonItem sender)
+{
+     map.MapType = MapKit.MKMapType.Standard;
+}
 
 
 ===> code listed in: ./ios230-maps-and-location-in-ios/Lab Materials/parts/part2.html
 
+..
+
+CLLocationManager locMan = new CLLocationManager();
+
+public override void ViewDidLoad ()
+{
+    base.ViewDidLoad ();
+
+    if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0) == true) 
+    {
+      locMan.RequestWhenInUseAuthorization();
+    }
+   ...
+};
+
+..
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+   <dict>
+      ...
+      <key>NSLocationWhenInUseUsageDescription</key>
+      <string>This app uses location to improve search results!</string>
+   </dict>
+</plist>
 ..
 
 var alertController = UIAlertController.Create(
@@ -1151,6 +3502,46 @@ var alert = new UIAlertView ("Unabled to determine location",
     null,"OK");
 alert.Show ();
 
+..
+
+public override void ViewDidAppear(bool animated)
+{
+    base.ViewDidAppear(animated);
+
+    if (CLLocationManager.Status == CLAuthorizationStatus.Denied)
+    {
+        if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0) == true)
+        {
+            var yesNoAlertController = UIAlertController.Create(
+                "Unable to determine location", 
+                "This application works best when it can determine your current " +
+                "position.  Would you like to go to Settings to enable location data?", 
+                UIAlertControllerStyle.Alert);
+
+            yesNoAlertController.AddAction(UIAlertAction.Create(
+                "Yes", UIAlertActionStyle.Default,
+                alert => {
+                    var settingsString = UIApplication.OpenSettingsUrlString;
+                    var url = new NSUrl(settingsString);
+                    UIApplication.SharedApplication.OpenUrl(url);
+                }));
+
+            yesNoAlertController.AddAction(UIAlertAction.Create(
+                "No", UIAlertActionStyle.Cancel, null));
+            this.PresentViewController(yesNoAlertController, true, null);
+        }
+        else
+        {
+            var alert = new UIAlertView ("Unabled to determine location",
+                "This application works best when it can determine your current " +
+                "position.  Please open the Settings and enable Location Services " +
+                "for this app.", 
+                null,"OK");
+            alert.Show ();
+        }
+    }
+}
+
 
 ===> code listed in: ./ios230-maps-and-location-in-ios/Lab Materials/parts/part3.html
 
@@ -1161,21 +3552,363 @@ CLLocationCoordinate2D locBoston = new CLLocationCoordinate2D(42.3601, -71.0589)
 CLLocationCoordinate2D locLondon = new CLLocationCoordinate2D(51.5072, -0.1275);
 CLLocationCoordinate2D locSingapore = new CLLocationCoordinate2D(1.3, 103.8);
 
+..
+
+partial void btnSanFran_Activated (UIBarButtonItem sender)
+{
+    map.Camera.CenterCoordinate = locSanFran;
+    map.Camera.Altitude = 5000;
+}
+
+..
+
+partial void btnBoston_Activated (UIBarButtonItem sender)
+{
+    map.MapType = MKMapType.Standard;
+
+    map.Camera.CenterCoordinate = locBoston;
+    map.Camera.Altitude = 500;
+    map.Camera.Pitch = 45;
+
+    map.ShowsBuildings = true;
+    map.PitchEnabled = true;
+}
+
+
+..
+
+partial void btnLondon_Activated (UIBarButtonItem sender)
+{
+    map.Camera = new MKMapCamera {
+        CenterCoordinate = locLondon,
+        Altitude = 10000,
+        Pitch = 45,
+        Heading = 180,
+    };
+}
+
+..
+
+partial void btnSingapore_Activated (UIBarButtonItem sender)
+{
+    var camera = new MKMapCamera {
+        CenterCoordinate = locSingapore,
+        Altitude = 10000,
+        Pitch = 45,
+        Heading = 180
+    };
+
+    map.SetCamera(camera, true);
+}
+
 
 ===> code listed in: ./ios230-maps-and-location-in-ios/Lab Materials/parts/part4.html
+
+..
+
+void AddAnnotation (CLLocationCoordinate2D coord, string title, string subtitle)
+{
+   var annotation = new MKPointAnnotation {
+      Title = title,
+      Subtitle = subtitle,
+      Coordinate = coord,
+   };
+
+   map.AddAnnotation (annotation);
+}
+
+..
+
+partial void btnPoints_Activated (UIBarButtonItem sender)
+{
+      AddAnnotation(locSanFran, "San Fransisco", "Fog and Xamarin HQ");
+      AddAnnotation(locBoston, "Boston", "Get a donut and coffee here");
+      AddAnnotation(locLondon, "London", "Big Ben isn't a clock");
+      AddAnnotation(locSingapore, "Singapore", "Mostly islands");
+
+      btnAddPoints.Enabled = false;
+      btnRemovePoints.Enabled = true;
+}
+
+..
+
+partial void btnRemove_Activated (UIBarButtonItem sender)
+{
+    map.RemoveAnnotations(map.Annotations);
+
+    btnAddPoints.Enabled = true;
+    btnRemovePoints.Enabled = false;
+}
 
 
 ===> code listed in: ./ios240-touch-in-ios/Lab Materials/parts/part1.html
 
+..
+
+public partial class DragAndSnapViewController : UIViewController
+{
+   bool imageIsMoving = false;
+   ...
+   public override void ViewDidLoad ()
+   {
+      base.ViewDidLoad ();
+      this.View.BringSubviewToFront (imgLogo);
+   }
+   ...
+}
+..
+
+public override void TouchesBegan (NSSet touches, UIEvent evt)
+{
+   base.TouchesBegan (touches, evt);
+
+   var touch = touches.AnyObject as UITouch;
+
+   if (touch == null)
+      return;
+
+   if (imgLogo.Frame.Contains (touch.LocationInView (View)))
+      imageIsMoving = true;
+}
+..
+
+public override void TouchesMoved (NSSet touches, UIEvent evt)
+{
+   base.TouchesMoved (touches, evt);
+
+   var touch = touches.AnyObject as UITouch;
+
+   if (touch == null || imageIsMoving == false)
+	    return;
+
+   nfloat deltaX = touch.PreviousLocationInView(View).X - touch.LocationInView(View).X;
+   nfloat deltaY = touch.PreviousLocationInView(View).Y - touch.LocationInView(View).Y;
+
+   var newPoint = new CGPoint (imgLogo.Frame.X - deltaX, imgLogo.Frame.Y - deltaY);
+
+   imgLogo.Frame = new CGRect(newPoint, imgLogo.Frame.Size);
+}
+..
+
+public override void TouchesEnded (NSSet touches, UIEvent evt)
+{
+   base.TouchesEnded (touches, evt);
+
+   var touch = touches.AnyObject as UITouch;
+
+   if (touch == null || imageIsMoving == false)
+      return;
+
+   if (boxOne.Frame.Contains (imgLogo.Center) == true)
+   {
+      imgLogo.Center = boxOne.Center;
+   }
+   else if (boxTwo.Frame.Contains (imgLogo.Center) == true)
+   {
+      imgLogo.Center = boxTwo.Center;
+   }
+   else
+   {
+      imgLogo.Center = this.View.Center;
+   }
+   imageIsMoving = false;
+}
+..
+
+public override void TouchesCancelled (NSSet touches, UIEvent evt)
+{
+   base.TouchesCancelled (touches, evt);
+
+   imageIsMoving = false;
+}
+..
+
+public override void TouchesEnded (NSSet touches, UIEvent evt)
+{
+   base.TouchesEnded (touches, evt);
+
+   var touch = touches.AnyObject as UITouch;
+
+   if (touch == null || imageIsMoving == false)
+	    return;
+
+   if (boxOne.Frame.Contains (imgLogo.Center) == true)
+   {
+      UIView.Animate (0.5, () => {
+		     imgLogo.Center = boxOne.Center;
+		     imgLogo.Transform = CGAffineTransform.MakeScale(0.5f, 0.5f);
+	    });
+   }
+   else if (boxTwo.Frame.Contains (imgLogo.Center) == true)
+   {
+      UIView.Animate (0.5, () => {
+         imgLogo.Center = boxTwo.Center;
+         imgLogo.Transform = CGAffineTransform.MakeScale(0.5f, 0.5f);
+      });
+   }
+   else
+   {
+      UIView.Animate (0.25, () => {
+		     imgLogo.Center = this.View.Center;
+		      imgLogo.Transform = CGAffineTransform.MakeScale (1, 1);
+	    });
+   }
+   imageIsMoving = false;
+}
 
 ===> code listed in: ./ios240-touch-in-ios/Lab Materials/parts/part2.html
 
+..
+
+public partial class XamDrawViewController : UIViewController
+{
+   Dictionary <IntPtr, UIColor> colors = new Dictionary<IntPtr, UIColor> ();
+   ...
+}
+..
+
+public override void TouchesBegan (NSSet touches, UIEvent evt)
+{
+   foreach (UITouch touch in touches)
+   {
+      var color = GetRandomColor ();
+      colors.Add(touch.Handle, color);
+   }
+}
+..
+
+public override void TouchesMoved (NSSet touches, UIEvent evt)
+{
+   foreach (UITouch touch in touches)
+   {
+      UIColor color; 
+      colors.TryGetValue(touch.Handle, out color);
+      DrawLine (touch.PreviousLocationInView (imgDraw), touch.LocationInView (imgDraw), color);
+   }
+}
+..
+
+public override void TouchesEnded (NSSet touches, UIEvent evt)
+{
+   foreach (UITouch touch in touches)
+   {
+      colors.Remove (touch.Handle);
+   }
+}
 
 ===> code listed in: ./ios240-touch-in-ios/Lab Materials/parts/part3.html
 
+..
+
+void UpdateTransform ()
+{
+   var transform = CGAffineTransform.MakeIdentity ();
+
+   transform.Translate (translate.X, translate.Y);
+
+   imgLogo.Transform = transform;
+}
+..
+
+public override void ViewDidLoad ()
+{
+   base.ViewDidLoad ();
+
+   var panGesture = new UIPanGestureRecognizer (HandlePan);
+   this.View.AddGestureRecognizer (panGesture);
+}
+..
+
+void HandlePan (UIPanGestureRecognizer gesture)
+{
+   if (gesture.State == UIGestureRecognizerState.Began)
+      gesture.SetTranslation (translate, this.View);
+}
+..
+
+void HandlePan (UIPanGestureRecognizer gesture)
+{
+   ...
+   var pos = gesture.TranslationInView (this.View);
+
+   translate.X = pos.X;
+   translate.Y = pos.Y;
+
+   UpdateTransform ();
+}
 
 ===> code listed in: ./ios240-touch-in-ios/Lab Materials/parts/part4.html
 
+..
+
+partial class GesturesViewController : UIViewController
+{
+   private nfloat rotation = 0;
+   private nfloat scale = 1;
+   ...
+
+..
+
+void UpdateTransform ()
+{
+   var transform = CGAffineTransform.MakeIdentity ();
+
+   transform.Rotate (rotation);
+
+   transform.Scale (scale, scale);
+
+   transform.Translate (translate.X, translate.Y);
+
+   imgLogo.Transform = transform;
+}
+..
+
+public override void ViewDidLoad ()
+{
+   ...
+
+   var rotationGesture = new UIRotationGestureRecognizer (HandleRotation);
+   this.View.AddGestureRecognizer (rotationGesture);
+
+   var pinchGesture = new UIPinchGestureRecognizer (HandlePinch);
+   this.View.AddGestureRecognizer (pinchGesture);
+}
+..
+
+void HandlePinch (UIPinchGestureRecognizer gesture)
+{
+   this.scale *= gesture.Scale;
+
+   if (scale > 2.5f)
+      scale = 2.5f;
+   else if (scale < 0.01)
+      scale = 0.1f;
+
+   gesture.Scale = 1;
+
+   UpdateTransform ();
+}
+..
+
+void HandleRotation (UIRotationGestureRecognizer gesture)
+{
+   this.rotation = gesture.Rotation;
+   UpdateTransform ();
+}
+..
+
+public override void ViewDidLoad ()
+{
+   ...
+   rotationGesture.ShouldRecognizeSimultaneously = ShouldRecognizeSimultaneously;
+   pinchGesture.ShouldRecognizeSimultaneously = ShouldRecognizeSimultaneously;
+   panGesture.ShouldRecognizeSimultaneously = ShouldRecognizeSimultaneously;
+}
+
+public bool ShouldRecognizeSimultaneously (UIGestureRecognizer gestureRecognizer, UIGestureRecognizer otherGestureRecognizer)
+{
+   return true;
+}
 
 ===> code listed in: ./IOS300-advanced-ios-ui/Lab Materials/parts/part1.html
 
@@ -1210,8 +3943,87 @@ NSLayoutConstraint GetConstraint (
             (constant == null) ? constraint.Constant : constant.Value);
 }
 
+..
+
+public override void WillRotate (UIInterfaceOrientation toInterfaceOrientation, double duration)
+{
+   base.WillRotate (toInterfaceOrientation, duration);
+   SetOrientation (
+         toInterfaceOrientation == UIInterfaceOrientation.LandscapeLeft ||
+         toInterfaceOrientation == UIInterfaceOrientation.LandscapeRight);
+}
+
+private void SetOrientation(bool isLandscape)
+{
+}
+
+..
+
+void SetOrientation (bool isLandscape)
+{
+   //remove the constraints we want to change
+   this.View.RemoveConstraint (constLeftText);
+   this.View.RemoveConstraint (constTopText);
+
+   //create new constraints based on orientation
+   if (isLandscape == true) 
+   {
+      // Going landscape. Move text to the right of the monkey.
+      constLeftText = GetConstraint (constraint: constLeftText,
+         // Text left constraint now attaches to monkey instead of parent view...
+         object2: imgMonkey,
+         // ...and constrains to the monkey image's right edge instead of the parent view left edge.
+         attribute2: NSLayoutAttribute.Trailing
+      );
+
+      constTopText = GetConstraint (constraint: constTopText,
+         // Top edge constraint of the text no longer attaches to monkey but to parent view now...
+         object2: this.View,
+         // ...and to top layout attribute instead of bottom of monkey image.
+         attribute2: NSLayoutAttribute.Top
+      );
+   } 
+   else 
+   {
+      constLeftText = GetConstraint (constraint: constLeftText,
+         // Text left constraint new attaches to the parent view...
+         object2: this.View,
+         // ...and the left edge of the parent view and no longer to the right edge of the monkey.
+         attribute2: NSLayoutAttribute.Leading
+      );
+
+      constTopText = GetConstraint (constraint: constTopText,
+         // Constrain the text to the monkey and no longer to the parent view...
+         object2: imgMonkey,
+         // ...and use the bottom edge of the monkey instead of the top of the parent view.
+         attribute2: NSLayoutAttribute.Bottom
+      );
+   }
+
+   //add the new constraints
+   this.View.AddConstraint (constLeftText);
+   this.View.AddConstraint (constTopText);
+}
+
 
 ===> code listed in: ./IOS300-advanced-ios-ui/Lab Materials/parts/part4.html
+
+..
+
+private void AnimateMonkey()
+{
+}
+
+public override void ViewDidLoad ()
+{
+    base.ViewDidLoad ();
+    
+    // Perform any additional setup after loading the view, typically from a nib.
+    imgMonkey.UserInteractionEnabled = true;
+
+    imgMonkey.AddGestureRecognizer(
+        new UITapGestureRecognizer(() => AnimateMonkey()));
+}
 
 ..
 
@@ -1219,6 +4031,29 @@ UIView.Animate (2.0, () => {
     this.View.AddConstraint (constMonkeyEdge);
     this.View.LayoutIfNeeded();
 });
+
+..
+
+void AnimateMonkey ()
+{
+    //let's move the monkey
+    this.View.RemoveConstraint (constMonkeyEdge);
+
+    monkeyIsOnLeft = !monkeyIsOnLeft;
+
+    var edge = (monkeyIsOnLeft) ? NSLayoutAttribute.Leading : NSLayoutAttribute.Trailing;
+
+    constMonkeyEdge = GetConstraint (constraint: constMonkeyEdge,
+        attribute1: edge,
+        attribute2: edge,
+        constant: constMonkeyEdge.Constant * -1
+    );
+
+    UIView.Animate (2.0, () => {
+        this.View.AddConstraint (constMonkeyEdge);
+        this.View.LayoutIfNeeded();
+    });
+}
 
 
 ===> code listed in: ./ios350-whats-new-in-ios8/Lab Materials/parts/part1.html
@@ -1267,6 +4102,33 @@ var searchResultsController = new SearchResultsViewController(this, Checks);
 
 ..
 
+public class SearchResultsUpdator : UISearchResultsUpdating
+{
+   public event Action<string> UpdateSearchResults = delegate {};
+
+   public override void UpdateSearchResultsForSearchController(UISearchController searchController)
+   {
+      this.UpdateSearchResults (searchController.SearchBar.Text);
+   }
+}
+
+..
+
+var searchResultsController = new SearchResultsViewController(this, Checks);
+
+// Create search updater and wire it up
+var searchUpdater = new SearchResultsUpdator();
+searchUpdater.UpdateSearchResults += searchResultsController.Search;
+
+..
+
+searchUpdater.UpdateSearchResults += searchResultsController.Search;
+
+SearchController = new UISearchController(searchResultsController);
+SearchController.SearchResultsUpdater = searchUpdater;
+
+..
+
 SearchController.SearchBar.Frame = new CGRect(SearchController.SearchBar.Frame.X, SearchController.SearchBar.Frame.Y, SearchController.SearchBar.Frame.Width, 44f);
 TableView.TableHeaderView = SearchController.SearchBar;
 DefinesPresentationContext = true;
@@ -1285,40 +4147,6 @@ public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
 ===> code listed in: ./location-services-and231/Lab Materials/parts/part1.html
 
 ..
-keytool
-..
-
-keytool -list -v -keystore [STORE FILENAME] -storepass [STORE PASSWORD] 
-        -keypass [KEY PASSWORD]
-
-..
-
-keytool -list -v -keystore ~/.local/share/Xamarin/Mono\ for\ Android/debug.keystore 
-        -storepass android -keypass android
-
-..
-
-Keystore type: JKS
-Keystore provider: SUN
-
-Your keystore contains 1 entry
-
-Alias name: androiddebugkey
-Creation date: Nov 21, 2013
-Entry type: PrivateKeyEntry
-Certificate chain length: 1
-Certificate[1]:
-Owner: CN=Android Debug, O=Android, C=US
-Issuer: CN=Android Debug, O=Android, C=US
-Serial number: 528e619d
-Valid from: Thu Nov 21 13:40:13 CST 2013 until: Tue Feb 17 13:40:13 CST 2043
-Certificate fingerprints:
-   MD5:  33:37:EB:AB:58:21:2F:0C:84:89:2B:E0:8E:51:D3:95
-   SHA1: 2F:5B:C7:6D:F6:8E:87:69:1A:62:44:14:59:4B:9F:4F:3B:EE:35:E9
-   Signature algorithm name: SHA1withRSA
-   Version: 3
-
-..
 
 using Android.App;
 
@@ -1331,11 +4159,143 @@ using Android.App;
 
 ===> code listed in: ./location-services-and231/Lab Materials/parts/part2.html
 
+..
+
+public void OnMapReady(GoogleMap googleMap)
+{
+   ...
+   LocationManager locManager = LocationManager.FromContext(this);
+   locManager.RequestLocationUpdates(LocationManager.GpsProvider, 5000, 100f, this);
+}
+
+..
+
+Marker currentLocationMarker;
+
+public void OnLocationChanged(Location location)
+{
+   LatLng coord = new LatLng(location.Latitude, location.Longitude);
+   CameraUpdate update = CameraUpdateFactory.NewLatLngZoom(coord, 17);
+   map.AnimateCamera(update);
+
+   if (currentLocationMarker != null) {
+       currentLocationMarker.Position = coord;
+   }
+   else {
+       var markerOptions = new MarkerOptions()
+           .SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueBlue))
+           .SetPosition(coord)
+           .SetTitle("Current Position")
+           .SetSnippet("This is where you are now");
+       currentLocationMarker = map.AddMarker(markerOptions);
+   }
+}
+
 
 ===> code listed in: ./location-services-and231/Lab Materials/parts/part3.html
 
+..
+
+public void OnMapReady(GoogleMap googleMap)
+{
+   ...
+   Criteria criteria = new Criteria {
+       Accuracy = Accuracy.Fine,
+       PowerRequirement = Power.NoRequirement,
+   };
+
+   LocationManager locManager = LocationManager.FromContext(this);
+   locManager.RequestLocationUpdates(5000, 100f, criteria, this, null);
+}
+
 
 ===> code listed in: ./location-services-and231/Lab Materials/parts/part4.html
+
+..
+
+GoogleApiClient apiClient;
+
+protected override void OnCreate(Bundle bundle)
+{
+    base.OnCreate(bundle);
+
+    ...
+    if (GoogleApiAvailability.Instance
+        .IsGooglePlayServicesAvailable(this) == 0) {
+      apiClient = new GoogleApiClient.Builder(this)
+          .AddConnectionCallbacks(this)
+          .AddOnConnectionFailedListener(this)
+          .AddApi(LocationServices.API)
+          .Build();
+    }
+}
+
+..
+
+protected override void OnStart()
+{
+    base.OnStart();
+    if (apiClient != null && map != null) {
+        apiClient.Connect();
+    }
+}
+
+..
+
+protected override void OnStop()
+{
+    base.OnStop();
+    if (apiClient != null) {
+        apiClient.Disconnect();
+    }
+}
+
+..
+
+public void OnMapReady(GoogleMap googleMap)
+{
+    ...
+
+    if (apiClient != null) {
+        if (!apiClient.IsConnected)
+            apiClient.Connect();
+    }
+    else {
+        LocationManager locManager = LocationManager.FromContext(this);
+        locManager.RequestLocationUpdates(5000, 100f, criteria, this, null);
+    }
+}
+
+..
+
+[Activity(Label = "DroidMapping", MainLauncher = true, Icon = "@drawable/icon")]
+public class MainActivity : Activity, IOnMapReadyCallback, ILocationListener,
+            GoogleApiClient.IConnectionCallbacks,
+            GoogleApiClient.IOnConnectionFailedListener
+{
+
+..
+
+public void OnConnected(Bundle connectionHint)
+{
+    LocationRequest locationRequest = LocationRequest.Create()
+        .SetPriority(LocationRequest.PriorityHighAccuracy)
+        .SetInterval(5000)
+        .SetSmallestDisplacement(100f);
+
+    LocationServices.FusedLocationApi.RequestLocationUpdates(
+        apiClient, locationRequest, this);
+}
+
+..
+
+[Activity(Label = "DroidMapping", MainLauncher = true, Icon = "@drawable/icon")]
+public class MainActivity : Activity, IOnMapReadyCallback,
+            Android.Locations.ILocationListener,
+            Android.Gms.Location.ILocationListener,
+            GoogleApiClient.IConnectionCallbacks
+            GoogleApiClient.IOnConnectionFailedListener
+{
 
 ..
 
@@ -1354,6 +4314,29 @@ apiClient = new GoogleApiClient.Builder(this)
 
 ..
 
+public void OnMapReady(GoogleMap googleMap)
+{
+  map = googleMap;
+  ...
+  map.MapClick += OnGetDetails;
+}
+
+void OnGetDetails(object sender, GoogleMap.MapClickEventArgs e)
+{
+}
+
+..
+
+async void OnGetDetails(object sender, GoogleMap.MapClickEventArgs e)
+{
+   Geocoder geocoder = new Geocoder(this);
+   var results = await geocoder.GetFromLocationAsync(
+                     e.Point.Latitude, e.Point.Longitude, 1);
+
+}
+
+..
+
 string GetAddress(Address result)
 {
     var sb = new System.Text.StringBuilder();
@@ -1365,12 +4348,69 @@ string GetAddress(Address result)
     return sb.ToString();
 }
 
+..
+
+Marker lastGeoMarker;
+
+async void OnGetDetails(object sender, GoogleMap.MapClickEventArgs e)
+{
+    Geocoder geocoder = new Geocoder(this);
+    var results = await geocoder.GetFromLocationAsync(
+                          e.Point.Latitude, e.Point.Longitude, 1);
+    if (results.Count > 0) {
+
+        var result = results[0];
+
+        if (lastGeoMarker == null) {
+            var markerOptions = new MarkerOptions()
+                .SetIcon(BitmapDescriptorFactory.DefaultMarker(
+                              BitmapDescriptorFactory.HueOrange))
+                .SetPosition(new LatLng(result.Latitude, result.Longitude))
+                .SetTitle(result.FeatureName)
+                .SetSnippet(GetAddress(result));
+            lastGeoMarker = map.AddMarker(markerOptions);
+        }
+        else {
+            lastGeoMarker.Position = new LatLng(result.Latitude, result.Longitude);
+            lastGeoMarker.Title = result.FeatureName;
+            lastGeoMarker.Snippet = GetAddress(result);
+        }
+
+        lastGeoMarker.ShowInfoWindow();
+    }
+}
+
 
 ===> code listed in: ./location-services-and231/Lab Materials/parts/part6.html
 
 ..
 
 LatLngBounds bounds = e.Point.GetBoundingBox(8000); // ~5mi
+
+..
+
+List<Marker> pointsOfInterest = new List<Marker>();
+
+async void ShowPOI(object sender, GoogleMap.MapLongClickEventArgs e)
+{
+    LatLngBounds bounds = e.Point.GetBoundingBox(8000); // ~5mi
+
+    pointsOfInterest.ForEach(m => m.Remove());
+    pointsOfInterest.Clear();
+
+    Geocoder geocoder = new Geocoder(this);
+    var results = await geocoder.GetFromLocationNameAsync("Starbucks", 5, 
+                      bounds.Southwest.Latitude, bounds.Southwest.Longitude,
+                      bounds.Northeast.Latitude, bounds.Northeast.Longitude);
+    foreach (var result in results) {
+        var markerOptions = new MarkerOptions()
+            .SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueCyan))
+            .SetPosition(new LatLng(result.Latitude, result.Longitude))
+            .SetTitle(result.FeatureName)
+            .SetSnippet(GetAddress(result));
+        pointsOfInterest.Add(map.AddMarker(markerOptions));
+    }
+}
 
 
 ===> code listed in: ./touch-gestures-and241/Lab Materials/parts/part1.html
@@ -1461,9 +4501,108 @@ public override bool OnTouchEvent (MotionEvent e)
 
 ===> code listed in: ./touch-gestures-and241/Lab Materials/parts/part2.html
 
+..
+
+public class MainActivity : Activity, GestureDetector.IOnGestureListener
+{
+   private ScaleGestureDetector scaleDetector;
+   private float scale = 1.0f;
+   ...
+
+   protected override void OnCreate (Bundle bundle)
+   {
+      ...
+      scaleDetector = new ScaleGestureDetector (this, this);
+   }
+   ...
+}
+..
+
+public class MainActivity : Activity, GestureDetector.IOnGestureListener, ScaleGestureDetector.IOnScaleGestureListener
+{
+   ...
+   public bool OnScale (ScaleGestureDetector detector)
+   {
+      return true;
+   }
+
+   public bool OnScaleBegin (ScaleGestureDetector detector)
+   {
+      return true;
+   }
+
+   public void OnScaleEnd (ScaleGestureDetector detector)
+   {
+   }
+}
+..
+
+public override bool OnTouchEvent (MotionEvent e)
+{
+   gestureDetector.OnTouchEvent (e);
+   scaleDetector.OnTouchEvent (e);
+
+   return true;
+}
+..
+
+public bool OnScale (ScaleGestureDetector detector)
+{
+   this.scale *= detector.ScaleFactor;
+
+   xamLogo.ScaleX = scale;
+   xamLogo.ScaleY = scale;
+
+   return true;
+}
 
 ===> code listed in: ./touch-gestures-and241/Lab Materials/parts/part3.html
 
+..
+
+using System;
+
+namespace RotationGesture
+{
+   public interface IOnRotationGestureListener
+   {
+      void OnRotate (float angle);
+   }
+}
+
+..
+
+using System;
+
+namespace RotationGesture
+{
+   public class RotationGestureDetector
+   {
+      private IOnRotationGestureListener rotationListener;
+
+      public RotationGestureDetector (IOnRotationGestureListener listener)
+      {
+         rotationListener = listener;
+      }
+
+      public bool OnTouchEvent (MotionEvent e)
+      {
+         return true;
+      }
+   }
+}        
+..
+
+public class RotationGestureDetector
+{
+   private int pId1, pId2;
+
+   private static int INVALID_ID = -1;
+
+   private float angleOffset;
+   private float angle;
+   ...
+} 
 ..
 
 float GetAngle (MotionEvent e, int pointerId1, int pointerId2)
@@ -1482,6 +4621,90 @@ float GetAngle (float x1, float y1, float x2, float y2)
    return (float)(angle * 180 / Math.PI);
 }
 
+..
+
+public bool OnTouchEvent (MotionEvent e)
+{
+   switch (e.ActionMasked)
+   {
+   case MotionEventActions.Down:
+      break;
+   case MotionEventActions.PointerDown:
+      break;
+   case MotionEventActions.Move:
+      break;
+   case MotionEventActions.Up:
+      break;
+   case MotionEventActions.PointerUp:
+      break;
+   }
+   return true;
+}
+        
+..
+
+public bool OnTouchEvent (MotionEvent e)
+{
+   switch (e.ActionMasked)
+   {
+   case MotionEventActions.Down:
+      pId1 = e.GetPointerId(e.ActionIndex);
+      break;
+   case MotionEventActions.PointerDown:
+      pId2 = e.GetPointerId (e.ActionIndex);
+      angleOffset = GetAngle (e, pId1, pId2) - angle;
+      break;
+   ...
+}
+..
+
+case MotionEventActions.Move:
+   if (e.PointerCount != 2 ||
+	   pId1 == INVALID_ID || pId2 == INVALID_ID)
+	   return false;
+
+   angle = GetAngle (e, pId1, pId2) - angleOffset;
+
+   if (rotationListener != null)
+	   rotationListener.OnRotate (angle);
+
+   break;
+..
+
+int id = e.GetPointerId (e.ActionIndex);
+   if (id == pId1)
+      pId1 = INVALID_ID;
+   if (id == pId2)
+      pId2 = INVALID_ID;
+   break;
+..
+
+public class MainActivity : Activity, GestureDetector.IOnGestureListener, ScaleGestureDetector.IOnScaleGestureListener, IOnRotationGestureListener
+{
+   private RotationGestureDetector rotationDetector;
+   ...
+
+   protected override void OnCreate (Bundle bundle)
+   {
+      ...
+      rotationDetector = new RotationGestureDetector (this);
+   }
+
+   public override bool OnTouchEvent (MotionEvent e)
+   {
+      ...
+      rotationDetector.OnTouchEvent (e);
+
+      return true;
+   }
+
+
+   public void OnRotate (float angle)
+   {
+      xamLogo.Rotation = angle;
+   }
+   ...
+}
 
 ===> code listed in: ./xam160-data-in-mobile/Lab Materials/parts/part1.html
 
@@ -1506,6 +4729,86 @@ public static string GetLocalFilePath(string filename)
    ...
 }
 
+..
+
+string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+return System.IO.Path.Combine(path, filename);
+
+..
+
+string docFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+string libFolder = System.IO.Path.Combine(docFolder, "..", "Library");
+
+if (!System.IO.Directory.Exists(libFolder)) {
+   System.IO.Directory.CreateDirectory(libFolder);
+}
+
+return System.IO.Path.Combine(libFolder, filename);
+
+..
+
+string path = global:Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+return System.IO.Path.Combine(path, filename);
+
+..
+
+public App(string displayText)
+{
+   MainPage = new ContentPage
+   {
+       Content = new StackLayout
+       {
+           VerticalOptions = LayoutOptions.Center,
+           Children = {
+               new Label {
+                  HorizontalTextAlignment = TextAlignment.Center,
+                  Text = displayText
+               }
+            }
+       }
+   };
+}
+
+..
+
+public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
+{
+   protected override void OnCreate(Bundle bundle)
+   {
+      base.OnCreate(bundle);
+      global::Xamarin.Forms.Forms.Init(this, bundle);
+      string dbPath = FileAccessHelper.GetLocalFilePath("people.db3");
+      LoadApplication(new App(dbPath));
+   }
+}
+
+..
+
+public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+{
+   ...
+   public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+   {
+      global::Xamarin.Forms.Forms.Init();
+      string dbPath = FileAccessHelper.GetLocalFilePath("people.db3");
+      LoadApplication(new App(dbPath));
+      return base.FinishedLaunching(app, options);
+   }
+}
+
+..
+
+public partial class MainPage : global::Xamarin.Forms.Platform.WinPhone.FormsApplicationPage
+{
+   public MainPage()
+   {
+       ...
+       global::Xamarin.Forms.Forms.Init();
+       string dbPath = FileAccessHelper.GetLocalFilePath("people.db3");
+       LoadApplication(new People.App(dbPath));
+   }
+}
+
 
 ===> code listed in: ./xam160-data-in-mobile/Lab Materials/parts/part2.html
 
@@ -1526,6 +4829,85 @@ namespace People.Models
 public int Id { get; set; }
 public string Name { get; set; }
 
+..
+[Table]
+..
+"people"
+..
+[PrimaryKey]
+..
+AutoIncrement
+..
+MaxLength
+..
+Unique
+..
+
+using SQLite;
+
+namespace People.Models
+{
+    [Table("people")]
+    public class Person
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
+        [MaxLength(250), Unique]
+        public string Name { get; set; }
+    }
+}
+
+..
+
+private SQLiteConnection conn;
+...
+public PersonRepository(string dbPath)
+{
+     conn = new SQLiteConnection(dbPath);
+     conn.CreateTable<Person>();
+}
+
+..
+Name
+..
+
+public void AddNewPerson(string name)
+{
+    try
+    {
+        ...
+        result = conn.Insert(new Person { Name = name });
+        StatusMessage = string.Format("{0} record(s) added [Name: {1})", result, name);
+    }
+    ...
+}
+
+..
+Table<T>
+..
+ToList
+..
+
+public List<Person> GetAllPeople()
+{
+    return conn.Table<Person>().ToList();
+}
+
+..
+
+public class App : Application
+{
+   public static PersonRepository PersonRepo { get; private set; }
+
+   public App(string dbPath)
+   {
+      PersonRepo = new PersonRepository(dbPath);
+
+      this.MainPage = new MainPage();
+   }
+}
+
 
 ===> code listed in: ./xam160-data-in-mobile/Lab Materials/parts/part4.html
 
@@ -1536,6 +4918,66 @@ public async Task<List<Person>> GetAllPeopleAsync()
     List<Person> people = await conn.Table<Person>().ToListAsync();
     // This line is executed once the awaited call completes execution
     return people;
+}
+
+..
+
+private readonly SQLiteAsyncConnection conn;
+
+public PersonRepository(string dbPath)
+{
+   conn = new SQLiteAsyncConnection(dbPath);
+   conn.CreateTableAsync<Person>().Wait();
+}
+
+..
+
+public async Task AddNewPersonAsync(string name)
+{
+    try
+    {
+      //basic validation to ensure a name was entered
+      if (string.IsNullOrEmpty(name))
+         throw new Exception("Valid name required");
+
+      //insert a new person into the Person table
+      var result = await conn.InsertAsync(new Person { Name = name });
+      StatusMessage = string.Format("{0} record(s) added [Name: {1})", result, name);
+   }
+   catch (Exception ex)
+   {
+      StatusMessage = string.Format("Failed to add {0}. Error: {1}", name, ex.Message);
+   }
+}
+
+..
+
+public async Task<List<Person>> GetAllPeopleAsync()
+{
+   //return a list of people saved to the Person table in the database
+   return await conn.Table<Person>().ToListAsync();
+}
+     
+
+..
+
+public async void OnNewButtonClicked(object sender, EventArgs args)
+{
+   statusMessage.Text = "";
+               
+   await App.PersonRepo.AddNewPersonAsync(newPerson.Text);
+   statusMessage.Text = App.PersonRepo.StatusMessage;
+}
+
+public async void OnGetButtonClicked(object sender, EventArgs args)
+{
+   statusMessage.Text = "";
+
+
+   ObservableCollection<Person> people = 
+       new ObservableCollection<Person>(
+           await App.PersonRepo.GetAllPeopleAsync());
+   peopleList.ItemsSource = people;
 }
 
 ..
@@ -1606,6 +5048,43 @@ public static List<GreatQuote> Quotes { get; private set; }
 
 ..
 
+namespace GreatQuotes 
+{
+    public interface ITextToSpeech
+    {
+        void Speak(string text);
+    }
+}
+
+..
+
+ServiceLocator.Instance.Add<ITextToSpeech, TextToSpeechService>();
+
+..
+
+public class QuoteManager 
+{
+    ...
+    public void SayQuote(GreatQuote quote)
+    {
+        if (quote == null)
+            throw new ArgumentNullException("quote");
+
+        ITextToSpeech tts = ServiceLocator.Instance.Resolve<ITextToSpeech>();
+        if (tts != null)
+        {
+            string text = quote.QuoteText;
+            if (!string.IsNullOrWhiteSpace(quote.Author))
+            {
+                text += " by " + quote.Author;
+            }
+            tts.Speak(text);
+        }
+    }
+}
+
+..
+
 public override void ViewDidLoad()
 {
     base.ViewDidLoad();
@@ -1635,4 +5114,83 @@ private void OnSayQuote(object sender, PointerRoutedEventArgs e)
 
 
 ===> code listed in: ./xam300-advanced-cross-platform-development/Lab Materials/parts/part3.html
+
+..
+
+public class QuoteManager
+{
+    public static QuoteManager Instance { get; private set; }
+
+    readonly IQuoteLoader loader;
+    public IList<GreatQuote> Quotes { get; private set; }
+
+    public QuoteManager(IQuoteLoader loader)
+    {
+        if (Instance != null)
+            throw new Exception("Can only create a single QuoteManager.");
+        Instance = this;
+        this.loader = loader;
+        Quotes = new ObservableCollection<GreatQuote>(loader.Load());
+    }
+    ...
+}
+
+..
+
+// AppDelegate.cs
+public partial class AppDelegate : UIApplicationDelegate
+{
+  readonly SimpleContainer container = new SimpleContainer();
+
+  public override UIWindow Window { get; set; }
+
+  public override void FinishedLaunching(UIApplication application)
+  {
+    QuoteLoaderFactory.Create = () => new QuoteLoader();
+    container.Register<IQuoteLoader, QuoteLoader>();
+    container.Create<QuoteManager>();
+  }
+  ...
+}
+
+..
+
+// App.cs
+public class App : Application
+{
+  readonly SimpleContainer container = new SimpleContainer();
+  ...
+
+  public override void OnCreate()
+  {
+    QuoteLoaderFactory.Create = () => new QuoteLoader();
+    container.Register<IQuoteLoader, QuoteLoader>();
+    container.Create<QuoteManager>();
+
+    ServiceLocator.Instance.Add<ITextToSpeech, TextToSpeechService>();
+
+    base.OnCreate();
+  }
+}
+
+..
+
+// App.xaml.cs
+sealed partial class App : Application
+{
+    readonly SimpleContainer container = new SimpleContainer();
+
+    public App()
+    {
+        QuoteLoaderFactory.Create = () => new QuoteLoader();
+        container.Register<IQuoteLoader, QuoteLoader>();
+        container.Create<QuoteManager>();
+
+        ServiceLocator.Instance.Add<ITextToSpeech, TextToSpeechService>();
+
+        this.InitializeComponent();
+        this.Suspending += OnSuspending;
+    }
+    ...
+}
 
