@@ -1,6 +1,16 @@
 
 
 Lynda.com Course: Learning Full-Stack JavaScript Development: MongoDB, Node and React
-
   Code on GitHub: https://github.com/jscomplete/learn-fullstack-javascript
 
+...
+
+Tutorial: A Detailed Look at React Native for JavaScript Developers
+https://www.youtube.com/watch?v=cuMezEwKFLU
+
+Intro to React Native with http://rangle.io Developer, Varun Vachhar. Webinar - May 17, 2016.
+This webinar provides detailed examples of React Native components that introduce a new way to write native mobile apps.
+
+  Code on GitHub: https://github.com/winkerVSbecks/spotify-artist-lookup
+
+...
