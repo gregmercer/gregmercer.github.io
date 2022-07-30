@@ -1,0 +1,102 @@
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+.c-tat__title-wrapper {
+  display: block;
+  margin: 0 0 0.625rem; }
+
+.c-tat__title, .c-tat__pdf-link-wrapper, .c-tat__suffix-title-wrapper {
+  display: inline-block; }
+
+.c-tat__pdf-link-wrapper, .c-tat__suffix-title-wrapper {
+  position: relative; }
+  .c-tat__pdf-link-wrapper::before, .c-tat__suffix-title-wrapper::before {
+    content: '|';
+    position: absolute;
+    left: 0;
+    top: -0.125rem;
+    color: #231f20; }
+
+.c-tat__title, .c-tat__pdf-link, .c-tat__pdf-link-wrapper, .c-tat__suffix-title-wrapper {
+  font-family: "NewsGothicBT-Demi", "Avant Garde", "Futura", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.125rem;
+  font-weight: normal;
+  line-height: 1.3; }
+
+.c-tat__title {
+  display: inline;
+  color: #231f20; }
+  .c-tat__title a {
+    color: #636f00; }
+    .c-tat__title a:hover {
+      color: #26639d; }
+
+.c-tat__pdf-link, .c-tat__suffix-title {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 0.9375rem;
+  color: #636f00; }
+  .c-tat__pdf-link a, .c-tat__suffix-title a {
+    color: inherit; }
+    .c-tat__pdf-link a:hover, .c-tat__suffix-title a:hover {
+      color: #26639d; }
+
+.c-tat__suffix-title {
+  color: #231f20; }
+
+.c-tat__description {
+  font-size: 1.125rem;
+  font-weight: normal;
+  line-height: 1.3;
+  margin: 0; }
+  .c-tat__description p {
+    font-size: inherit;
+    line-height: inherit; }
+    .c-tat__description p:last-child, .c-tat__description p:last-of-type {
+      margin-bottom: 0; }
+  .c-tat__description .meta-info {
+    display: inline-block;
+    font-size: 1.125rem;
+    line-height: 1.3;
+    margin: 0 0 0.40625rem; }
+    .c-tat__description .meta-info * {
+      display: inline; }
+    .c-tat__description .meta-info:last-child {
+      margin: 0; }
