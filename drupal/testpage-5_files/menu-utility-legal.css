@@ -1,0 +1,74 @@
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+.c-menu__item--utility-legal {
+  display: block;
+  margin: 0.25rem 0 1.25rem;
+  padding: 0; }
+  .c-menu__item--utility-legal:last-child {
+    margin-bottom: 0; }
+  @media (min-width: 768px) {
+    .c-menu__item--utility-legal {
+      display: inline;
+      margin: 0.8125rem 1.625rem 0.8125rem 0;
+      padding: 0; }
+      .c-menu__item--utility-legal:last-child {
+        margin: 0; } }
+
+@media (max-width: 991.98px) {
+  .c-menu__item--expanded.utility-legal--expanded, .c-menu__item--active-trail.utility-legal--expanded {
+    display: inline; } }
+
+.c-menu__item--expanded.utility-legal--expanded .c-menu, .c-menu__item--active-trail.utility-legal--expanded .c-menu {
+  display: inline; }
+  @media (min-width: 768px) {
+    .c-menu__item--expanded.utility-legal--expanded .c-menu, .c-menu__item--active-trail.utility-legal--expanded .c-menu {
+      display: none; } }
+
+.c-menu__item-link--utility-legal {
+  color: #666666;
+  font-family: "NewsGothicBT-Demi", "Avant Garde", "Futura", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.3;
+  margin: 0; }
+  .c-menu__item-link--utility-legal:hover {
+    color: #666666; }
+  .c-menu__item-link--utility-legal[target='_blank']:hover::after {
+    color: #666666; }

@@ -1,0 +1,113 @@
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+.c-menu--menu-social-with-icon {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0; }
+
+.c-menu .c-menu__item--menu-social-with-icon {
+  margin-right: 0.8125rem; }
+  .c-menu .c-menu__item--menu-social-with-icon:last-child {
+    margin-right: 0; }
+  .c-menu .c-menu__item--menu-social-with-icon .c-menu__item-link {
+    position: relative;
+    font-size: 0;
+    border: 0;
+    border: 0.0625rem solid #8c1515;
+    background: none;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    display: block;
+    text-align: center;
+    margin-bottom: 0;
+    padding: 0; }
+    .c-menu .c-menu__item--menu-social-with-icon .c-menu__item-link::after {
+      position: absolute;
+      display: inline;
+      speak: none;
+      text-rendering: optimizeLegibility;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      text-transform: none;
+      line-height: 1;
+      font-style: normal;
+      font-variant: normal;
+      font-weight: normal;
+      font-family: 'icons';
+      top: 1.6rem;
+      margin: -0.6875rem 0 0 -0.5625rem;
+      font-size: 1.25rem;
+      padding-left: 0; }
+    .c-menu .c-menu__item--menu-social-with-icon .c-menu__item-link:hover, .c-menu .c-menu__item--menu-social-with-icon .c-menu__item-link:focus {
+      background-color: #2c6180;
+      border: 0; }
+      .c-menu .c-menu__item--menu-social-with-icon .c-menu__item-link:hover::after, .c-menu .c-menu__item--menu-social-with-icon .c-menu__item-link:focus::after {
+        color: #fff; }
+  .c-menu .c-menu__item--menu-social-with-icon.social-block-twitter .c-menu__item-link::after {
+    content: '\f121' !important; }
+  .c-menu .c-menu__item--menu-social-with-icon.social-block-facebook .c-menu__item-link::after {
+    content: '\f113' !important; }
+  .c-menu .c-menu__item--menu-social-with-icon.social-block-insta .c-menu__item-link {
+    color: #fff;
+    display: block;
+    margin: 0 auto;
+    background-image: url("../images/icon-insta-active.svg");
+    background-repeat: no-repeat;
+    background-size: 35%;
+    fill: #8c1515;
+    background-position: center; }
+    .c-menu .c-menu__item--menu-social-with-icon.social-block-insta .c-menu__item-link:hover, .c-menu .c-menu__item--menu-social-with-icon.social-block-insta .c-menu__item-link:focus {
+      background-image: url("../images/icon-insta-hover.svg");
+      background-repeat: no-repeat;
+      background-size: 35%;
+      background-position: center;
+      background-color: #2c6180;
+      fill: #fff; }
+    .c-menu .c-menu__item--menu-social-with-icon.social-block-insta .c-menu__item-link::after {
+      content: none !important; }
+  .c-menu .c-menu__item--menu-social-with-icon.social-block-youtube .c-menu__item-link::after {
+    content: '\f123' !important;
+    top: 50%; }
+  .c-menu .c-menu__item--menu-social-with-icon.social-block-linkedin .c-menu__item-link::after {
+    content: '\f114' !important; }
+  .c-menu .c-menu__item--menu-social-with-icon.social-block-gmail .c-menu__item-link::after {
+    content: '\f111' !important; }

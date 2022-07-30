@@ -1,0 +1,56 @@
+@charset "UTF-8";
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+.breadcrumb {
+  padding-bottom: 2.4375rem;
+  position: relative; }
+  .breadcrumb__item {
+    font-size: 1rem; }
+    .breadcrumb__item a {
+      font-size: 1rem; }
+    .breadcrumb__item::after {
+      content: '›';
+      color: #231f20;
+      padding-left: 0.1875rem; }
+    .breadcrumb__item.active, .breadcrumb__item.is-active {
+      color: #231f20; }
+      .breadcrumb__item.active::after, .breadcrumb__item.is-active::after {
+        display: none; }
