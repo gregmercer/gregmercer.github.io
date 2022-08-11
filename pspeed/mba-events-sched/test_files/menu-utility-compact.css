@@ -1,0 +1,79 @@
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+.c-menu__item-link--utility-compact {
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.3; }
+
+.c-menu--utility-compact {
+  text-align: left; }
+  @media (min-width: 1190px) {
+    .c-menu--utility-compact {
+      text-align: right;
+      padding: 0 1.25rem 0 0;
+      border-right: 0.0625rem solid #d9d9d9; } }
+
+.c-menu__item--utility-compact {
+  display: list-item;
+  margin: 0 0 1.25rem;
+  padding: 0; }
+  .c-menu__item--utility-compact:last-child {
+    margin-bottom: 0; }
+
+@media (max-width: 991.98px) {
+  .c-menu__item--expanded.utility-compact--expanded, .c-menu__item--active-trail.utility-compact--expanded {
+    display: inline; } }
+
+.c-menu__item--expanded.utility-compact--expanded .c-menu, .c-menu__item--active-trail.utility-compact--expanded .c-menu {
+  display: inline; }
+  @media (min-width: 768px) {
+    .c-menu__item--expanded.utility-compact--expanded .c-menu, .c-menu__item--active-trail.utility-compact--expanded .c-menu {
+      display: none; } }
+
+.c-menu__item-link--utility-compact {
+  color: #8c1515;
+  margin: 0; }
+  @media (min-width: 992px) {
+    .c-menu__item-link--utility-compact {
+      font-size: 1.125rem; } }
+
+.c-menu__item-link:hover::after, .c-menu__item-link:focus::after {
+  color: #26639d; }

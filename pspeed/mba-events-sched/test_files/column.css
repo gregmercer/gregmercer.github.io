@@ -1,0 +1,69 @@
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+/**
+ * Strip Unit
+ *   Remove unit from value.
+*/
+/**
+ * Convert to Rem
+ *   Does the main work of converting to a standardized unit by stripping a number
+ *   and multiplying by the rem value.
+ */
+/**
+ * Rem Calc
+ *   Converts any standard CSS measurement to rem.
+ *   Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+ *
+ * @example rem-calc(10 20 30px 40);
+ *   Numbers are space delimited. If you want to delimit using commas,
+ *   wrap it in another pair of parens.
+ *
+ * @example rem-calc((10, 20, 30, 40px));
+*/
+.layout {
+  display: flex;
+  flex-wrap: wrap; }
+  .layout > .layout__column {
+    padding-right: 1.25rem; }
+
+.layout--twocol-section > .layout__column,
+.columns-2 > .layout__column {
+  flex: 0 1 50%; }
+  @media (max-width: 1189.98px) {
+    .layout--twocol-section > .layout__column,
+    .columns-2 > .layout__column {
+      flex: 0 1 100%; } }
+
+.layout--threecol-section > .layout__column,
+.columns-3 > .layout__column {
+  flex: 0 1 33%; }
+  @media (max-width: 1189.98px) {
+    .layout--threecol-section > .layout__column,
+    .columns-3 > .layout__column {
+      flex: 0 1 100%; } }
+
+.layout--fourcol-section > .layout__column,
+.columns-4 > .layout__column {
+  flex: 0 1 25%; }
+  @media (max-width: 1189.98px) {
+    .layout--fourcol-section > .layout__column,
+    .columns-4 > .layout__column {
+      flex: 0 1 100%; } }
