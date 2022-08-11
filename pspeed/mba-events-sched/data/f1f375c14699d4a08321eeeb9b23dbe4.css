@@ -1,0 +1,17 @@
+
+
+@font-face {
+    font-family: 'igbr-Source Serif Pro Regular';
+    
+    
+    src: 
+        url('6d8f4ed7a1248064225dc3b7a52366bb.woff2') format('woff2'),
+        
+        url('2651a2cd4b0948d61185ad43a469bc36.woff') format('woff'),
+        
+        url('1b5ec86c1a944d051feae024e43b0a2d.ttf') format('truetype'),
+        
+        url('dad9edf9a56c181f146cc033cdde054d.otf') format('opentype');
+        
+}
+

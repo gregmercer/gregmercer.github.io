@@ -1,0 +1,19 @@
+
+
+@font-face {
+    font-family: 'igbr-Source Serif Pro Bold';
+    
+    font-weight: bold;
+    
+    
+    src: 
+        url('efc959d0863da1de96832fade9b58abb.woff2') format('woff2'),
+        
+        url('7db03832d2121ba066d4e6b7060addc4.woff') format('woff'),
+        
+        url('a7cc02618a8da20f74f3910b42eb38d8.ttf') format('truetype'),
+        
+        url('d631b4fa22a88ee1fe138b8650c8df8e.otf') format('opentype');
+        
+}
+
