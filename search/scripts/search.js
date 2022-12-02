@@ -1,5 +1,5 @@
 // Update this variable to point to your domain.
-var apigatewayendpoint = '';
+var apigatewayendpoint = 'https://d1aqmji3hl.execute-api.us-west-2.amazonaws.com/dev/listMovies';
 var loadingdiv = $('#loading');
 var noresults = $('#noresults');
 var resultdiv = $('#results');
