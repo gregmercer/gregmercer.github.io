@@ -28,7 +28,6 @@ async function search() {
     console.log(results);
     if (results.length > 0) {
       loadingdiv.hide();
-      }
     } else {
       noresults.show();
     }
